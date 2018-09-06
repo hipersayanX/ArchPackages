@@ -48,5 +48,6 @@ prepare: PKGBUILD
 		pkgfolder=$(PKGBASE)-$$arch; \
 		$(MKDIR) $$pkgfolder; \
 		$(LINK) "$$PWD/$$fileName" $$pkgfolder/$$fileName; \
+		$(COPY) *.patch $$pkgfolder; \
 		sed "s/android_arch=/android_arch=$$arch/g" PKGBUILD > $$pkgfolder/PKGBUILD; \
 	done
