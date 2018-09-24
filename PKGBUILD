@@ -64,17 +64,15 @@ options=('!strip'
          '!emptydirs')
 _pkgfqn="qt-everywhere-src-${pkgver}"
 source=("http://download.qt-project.org/official_releases/qt/${pkgver:0:4}/${pkgver}/single/${_pkgfqn}.tar.xz"
-        "0034-Fix-build-error-related-to-glibc-2.28-and-stat.patch")
+        "0001-Fix-clang-build.patch")
 md5sums=('152a8ade9c11fe33ff5bc95310a1bb64'
-         'a09f862ecd197748c36c7bf624f72f9a')
+         '511eafcabe9e0c6210f1dc5e26daa5c8')
 
 prepare() {
     cd ${_pkgfqn}
 
     # Platform specific patches.
-
-    # Apply patch for glibc 2.28
-#    patch -Np1 -i "../0034-Fix-build-error-related-to-glibc-2.28-and-stat.patch"
+    patch -Np1 -i "../0001-Fix-clang-build.patch"
 }
 
 get_last() {
@@ -134,6 +132,11 @@ build() {
         -qt-freetype
         -android-arch ${android_arch}
         -android-ndk-platform ${ANDROID_NDK_PLATFORM}"
+
+    # qtlocation needs mapbox-gl-native, and mapbox-gl-native needs C++17 and
+    # higher so disable it for a while.
+    configue_opts+="
+        -skip qtlocation"
 
     # Platform specific patches
     case "$android_arch" in
