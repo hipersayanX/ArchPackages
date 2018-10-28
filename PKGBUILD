@@ -29,7 +29,7 @@ fi
 _pkgname=android-qt5
 pkgname=${_pkgname}-${_android_arch}
 pkgver=5.11.2
-pkgrel=3
+pkgrel=4
 pkgdesc="Qt 5 for Android"
 arch=('x86_64')
 url='https://www.qt.io'
@@ -142,6 +142,10 @@ build() {
         -qt-freetype
         -android-arch ${_android_arch}
         -android-ndk-platform ${ANDROID_NDK_PLATFORM}"
+
+    [[ $ANDROID_DEBUG_BUILD ]] \
+        && configue_opts+=' -debug-and-release' \
+        || configue_opts+=' -release'
 
     # Platform specific patches
     case "$_android_arch" in
