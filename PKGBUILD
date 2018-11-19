@@ -15,7 +15,7 @@ _android_arch=
 #
 # https://developer.android.com/about/dashboards/
 if [ -z "${ANDROID_MINIMUM_PLATFORM}" ]; then
-    export ANDROID_MINIMUM_PLATFORM=21
+    export ANDROID_MINIMUM_PLATFORM=22
 fi
 
 if [ -z "${ANDROID_NDK_ROOT}" ]; then
@@ -29,7 +29,7 @@ fi
 _pkgname=android-qt5
 pkgname=${_pkgname}-${_android_arch}
 pkgver=5.11.2
-pkgrel=4
+pkgrel=3
 pkgdesc="Qt 5 for Android"
 arch=('x86_64')
 url='https://www.qt.io'
@@ -126,7 +126,10 @@ build() {
         -opensource
         -silent
         -prefix ${_pref}
-        -docdir ${_pref}/doc
+        -archdatadir ${_pref}/lib/qt
+        -datadir ${_pref}/share/qt
+        -examplesdir ${_pref}/share/qt/examples
+        -testsdir ${_pref}/share/qt/tests
         -xplatform android-clang
         -nomake tests
         -nomake examples
@@ -191,6 +194,6 @@ package() {
     find ${pkgdir}/${_pref}/bin ! -name '*.pl' -exec ${STRIP} {} \;
     find ${pkgdir}/${_pref}/lib -name 'lib*.so' -exec ${STRIP} {} \;
     find ${pkgdir}/${_pref}/lib \( -name 'lib*.a' ! -name 'libQt5Bootstrap.a' ! -name 'libQt5QmlDevTools.a' \) -exec ${STRIP} {} \;
-    find ${pkgdir}/${_pref}/plugins -name 'lib*.so' -exec ${STRIP} {} \;
+    find ${pkgdir}/${_pref}/lib/qt/plugins -name 'lib*.so' -exec ${STRIP} {} \;
     sed -i '/QMAKE_PRL_BUILD_DIR/d' ${pkgdir}/${_pref}/lib/lib*.prl
 }
