@@ -26,10 +26,9 @@ if [ -z "${ANDROID_SDK_ROOT}" ]; then
     export ANDROID_SDK_ROOT=/opt/android-sdk
 fi
 
-_pkgname=android-qt5
-pkgname=${_pkgname}-${_android_arch}
+pkgname=android-${_android_arch}-qt5
 pkgver=5.11.2
-pkgrel=3
+pkgrel=1
 pkgdesc="Qt 5 for Android"
 arch=('x86_64')
 url='https://www.qt.io'
@@ -52,7 +51,11 @@ depends=('java-runtime-headless>=7'
 groups=('android-qt5')
 
 case "$_android_arch" in
-    arm*)
+    aarch64)
+        optdepends=('android-google-apis-armv7a-eabi: AVD support'
+                    'android-armv7a-eabi-system-image: AVD support')
+        ;;
+    armv7a-eabi)
         optdepends=('android-google-apis-armv7a-eabi: AVD support'
                     'android-armv7a-eabi-system-image: AVD support')
         ;;
@@ -60,7 +63,7 @@ case "$_android_arch" in
         optdepends=('android-google-apis-x86: AVD support'
                     'android-x86-system-image: AVD support')
         ;;
-    x86_64)
+    x86-64)
         optdepends=('android-google-apis-x86-64: AVD support'
                     'android-x86-64-system-image: AVD support')
         ;;
@@ -121,6 +124,21 @@ build() {
         export ANDROID_NDK_PLATFORM=android-$ANDROID_MINIMUM_PLATFORM
     fi
 
+    case "$_android_arch" in
+        aarch64)
+            target_arch=arm64-v8a
+            ;;
+        armv7a-eabi)
+            target_arch=armeabi-v7a
+            ;;
+        x86)
+            target_arch=x86
+            ;;
+        x86-64)
+            target_arch=x86_64
+            ;;
+    esac
+
     configue_opts="
         -confirm-license
         -opensource
@@ -143,7 +161,7 @@ build() {
         -no-pkg-config
         -qt-zlib
         -qt-freetype
-        -android-arch ${_android_arch}
+        -android-arch ${target_arch}
         -android-ndk-platform ${ANDROID_NDK_PLATFORM}"
 
     [[ $ANDROID_DEBUG_BUILD ]] \
@@ -172,11 +190,11 @@ package() {
     make INSTALL_ROOT=${pkgdir} install
 
     case "$_android_arch" in
-        arm64-v8a)
+        aarch64)
             toolchain=aarch64-linux-android-4.9
             stripFolder=aarch64-linux-android
             ;;
-        armeabi-v7a)
+        armv7a-eabi)
             toolchain=arm-linux-androideabi-4.9
             stripFolder=arm-linux-androideabi
             ;;
@@ -184,7 +202,7 @@ package() {
             toolchain=x86-4.9
             stripFolder=i686-linux-android
             ;;
-        x86_64)
+        x86-64)
             toolchain=x86_64-4.9
             stripFolder=x86_64-linux-android
             ;;

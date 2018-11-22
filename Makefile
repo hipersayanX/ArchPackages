@@ -1,5 +1,5 @@
-PKGBASE = android-qt5
-ARCHS = arm64-v8a armeabi-v7a x86 x86_64
+PKGBASE = qt5
+ARCHS = aarch64 armv7a-eabi x86 x86-64
 MKDIR = mkdir -pv
 COPY = cp -vf
 REMOVE = rm -vf
@@ -10,7 +10,7 @@ MAKEPKG = MAKEFLAGS=-j4 makepkg -s
 
 all: prepare
 	for arch in $(ARCHS); do \
-		pkgfolder=$(PKGBASE)-$$arch; \
+		pkgfolder=android-$$arch-$(PKGBASE); \
 		cd $$pkgfolder; \
 		$(MAKEPKG); \
 		cd ..; \
@@ -20,7 +20,7 @@ all: prepare
 
 clean:
 	for arch in $(ARCHS) ; do \
-		pushd $(PKGBASE)-$$arch; \
+		pushd android-$$arch-$(PKGBASE); \
 			$(RMDIR) pkg; \
 			$(RMDIR) src; \
 			$(REMOVE) PKGBUILD; \
@@ -30,7 +30,7 @@ clean:
 
 publish:
 	for arch in $(ARCHS); do \
-		pkgfolder=$(PKGBASE)-$$arch; \
+		pkgfolder=android-$$arch-$(PKGBASE); \
 		cd $$pkgfolder; \
 		mksrcinfo; \
 		git add .; \
@@ -45,9 +45,10 @@ prepare: PKGBUILD
 		$(DOWNLOAD) http://download.qt-project.org/official_releases/qt/$${pkgver:0:4}/$$pkgver/single/$$fileName; \
 	fi; \
 	for arch in $(ARCHS); do \
-		pkgfolder=$(PKGBASE)-$$arch; \
+		pkgfolder=android-$$arch-$(PKGBASE); \
 		$(MKDIR) $$pkgfolder; \
 		$(LINK) "$$PWD/$$fileName" $$pkgfolder/$$fileName; \
 		$(COPY) *.patch $$pkgfolder; \
+		$(COPY) .gitignore $$pkgfolder; \
 		sed "s/_android_arch=/_android_arch=$$arch/g" PKGBUILD > $$pkgfolder/PKGBUILD; \
 	done
