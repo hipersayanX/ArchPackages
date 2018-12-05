@@ -1,0 +1,173 @@
+pkgname=mingw-w64-ffmpeg-zeranoe
+pkgver=4.0
+pkgrel=1
+epoch=1
+pkgdesc="Complete solution to record, convert and stream audio and video (mingw-w64, binary zeranoe build)"
+arch=('any')
+url="http://ffmpeg.org/"
+license=('GPL3')
+depends=('mingw-w64-crt')
+options=(!strip !buildflags staticlibs)
+makedepends=()
+provides=('mingw-w64-ffmpeg')
+conflicts=('mingw-w64-ffmpeg')
+source=("https://ffmpeg.zeranoe.com/builds/win32/shared/ffmpeg-${pkgver}-win32-shared.zip"
+        "https://ffmpeg.zeranoe.com/builds/win32/dev/ffmpeg-${pkgver}-win32-dev.zip"
+        "https://ffmpeg.zeranoe.com/builds/win64/shared/ffmpeg-${pkgver}-win64-shared.zip"
+        "https://ffmpeg.zeranoe.com/builds/win64/dev/ffmpeg-${pkgver}-win64-dev.zip")
+sha256sums=('530c92df0ca14c35901b4b681847d62da3c50a0cc9b7ced37b04968f6b5c243d'
+            'e2f5200b5e73c4d0abb9b89c4ffc0438f92a0aadc54c81cf57e18c81a9f11c6b'
+            '8fe2d344463dbefc2db4239a4203a55ed0324faceaae57276a40c4fabda84c37'
+            'facced738eabfc53fa92834dea8b24426f64db61298688fed480145945be07fa')
+
+readversion() {
+    libname=$(echo $2 | awk '{print toupper($0)}')
+    cat "$1" | \
+    while read line; do
+        _vmajor=$(echo $line | grep "^#define LIB${libname}_VERSION_MAJOR" | awk '{print $3}')
+        _vminor=$(echo $line | grep "^#define LIB${libname}_VERSION_MINOR" | awk '{print $3}')
+        _vmicro=$(echo $line | grep "^#define LIB${libname}_VERSION_MICRO" | awk '{print $3}')
+
+        if [ -n "$_vmajor" ]; then
+            vmajor=$_vmajor
+        fi
+
+        if [ -n "$_vminor" ]; then
+            vminor=$_vminor
+        fi
+
+        if [ -n "$_vmicro" ]; then
+            vmicro=$_vmicro
+        fi
+
+        if [[ -n "$vmajor" && -n "$vminor" && -n "$vmicro" ]]; then
+            echo $vmajor.$vminor.$vmicro
+
+            break
+        fi
+    done
+}
+
+libdescription() {
+    descriptions=('avcodec Encoding/Decoding Library.'
+                  'avdevice Special devices muxing/demuxing library.'
+                  'avfilter Graph-based frame editing library.'
+                  'avformat I/O and Muxing/Demuxing Library'
+                  'avutil Common code shared across all FFmpeg libraries.'
+                  'postproc Video postprocessing library.'
+                  'swresample Audio resampling, sample format conversion and mixing library.'
+                  'swscale Color conversion and scaling library.')
+
+    for description in "${descriptions[@]}"; do
+        if [[ "$description" == $1\ * ]]; then
+            echo ${description#* }
+
+            break
+        fi
+    done
+}
+
+
+requires() {
+    deps=('avcodec libswresample, libavutil'
+          'avdevice libavfilter, libswscale, libpostproc, libavresample, libavformat, libavcodec, libswresample, libavutil'
+          'avfilter libswscale, libpostproc, libavresample, libavformat, libavcodec, libswresample, libavutil'
+          'avformat libavcodec, libswresample, libavutil'
+          'postproc libavutil'
+          'swresample libavutil'
+          'swscale libavutil')
+
+    for dep in "${deps[@]}"; do
+        if [[ "$dep" == $1\ * ]]; then
+            echo ${dep#* }
+
+            break
+        fi
+    done
+}
+
+package() {
+    # Copy i686 binaries
+    install -d "${pkgdir}"/usr/i686-w64-mingw32/bin
+    install -m644 \
+        "${srcdir}"/ffmpeg-${pkgver}-win32-shared/bin/*.dll \
+        "${pkgdir}"/usr/i686-w64-mingw32/bin/
+    install -m644 \
+        "${srcdir}"/ffmpeg-${pkgver}-win32-shared/bin/{ffmpeg,ffplay,ffprobe}.exe \
+        "${pkgdir}"/usr/i686-w64-mingw32/bin/
+
+    # Copy x86_64 binaries
+    install -d "${pkgdir}"/usr/x86_64-w64-mingw32/bin
+    install -m644 \
+        "${srcdir}"/ffmpeg-${pkgver}-win64-shared/bin/*.dll \
+        "${pkgdir}"/usr/x86_64-w64-mingw32/bin/
+    install -m644 \
+        "${srcdir}"/ffmpeg-${pkgver}-win64-shared/bin/{ffmpeg,ffplay,ffprobe}.exe \
+        "${pkgdir}"/usr/x86_64-w64-mingw32/bin/
+
+    # Copy i686 libraries
+    install -d "${pkgdir}"/usr/i686-w64-mingw32/include
+    install -d "${pkgdir}"/usr/i686-w64-mingw32/lib
+    cp -rf \
+        "${srcdir}"/ffmpeg-${pkgver}-win32-dev/include/* \
+        "${pkgdir}"/usr/i686-w64-mingw32/include/
+    install -m644 \
+        "${srcdir}"/ffmpeg-${pkgver}-win32-dev/lib/*.a \
+        "${pkgdir}"/usr/i686-w64-mingw32/lib/
+
+    # Copy x86_64 libraries
+    install -d "${pkgdir}"/usr/x86_64-w64-mingw32/include
+    install -d "${pkgdir}"/usr/x86_64-w64-mingw32/lib
+    cp -rf \
+        "${srcdir}"/ffmpeg-${pkgver}-win64-dev/include/* \
+        "${pkgdir}"/usr/x86_64-w64-mingw32/include/
+    install -m644 \
+        "${srcdir}"/ffmpeg-${pkgver}-win64-dev/lib/*.a \
+        "${pkgdir}"/usr/x86_64-w64-mingw32/lib/
+
+    # Copy data files
+    install -d "${pkgdir}"/usr/i686-w64-mingw32/share/ffmpeg
+    cp -rf \
+        "${srcdir}"/ffmpeg-${pkgver}-win32-shared/{doc,presets,LICENSE.txt,README.txt} \
+        "${pkgdir}"/usr/i686-w64-mingw32/share/ffmpeg
+    install -d "${pkgdir}"/usr/x86_64-w64-mingw32/share/ffmpeg/
+    cp -rf \
+        "${srcdir}"/ffmpeg-${pkgver}-win64-shared/{doc,presets,LICENSE.txt,README.txt} \
+        "${pkgdir}"/usr/x86_64-w64-mingw32/share/ffmpeg/
+
+    # Create pkg-config files
+    for arch in 'i686' 'x86_64'; do
+        libdir="${pkgdir}"/usr/$arch-w64-mingw32/lib
+        pkgconfigdir="$libdir"/pkgconfig
+        mkdir -p "$pkgconfigdir"
+
+        ls "${pkgdir}"/usr/$arch-w64-mingw32/lib/*.a | \
+        while read lib; do
+            libname=$(basename $lib | sed 's/.dll.a//g' | sed 's/^lib//g')
+
+            if [[ $arch == i686 ]]; then
+                ffarch=win32
+            else
+                ffarch=win64
+            fi
+
+            version=$(readversion "${srcdir}"/ffmpeg-${pkgver}-$ffarch-dev/include/lib$libname/version.h $libname)
+            description=$(libdescription $libname)
+            deps=$(requires $libname)
+
+            cat << EOF > "$pkgconfigdir/lib$libname.pc"
+prefix=/usr/$arch-w64-mingw32
+exec_prefix=\${prefix}
+libdir=\${prefix}/lib
+includedir=\${prefix}/include
+
+Name: lib$libname
+Description: $description
+Version: $version
+Requires.private: $deps
+Libs: -L\${libdir} -l$libname
+Cflags: -I\${includedir}
+EOF
+        done
+    done
+}
