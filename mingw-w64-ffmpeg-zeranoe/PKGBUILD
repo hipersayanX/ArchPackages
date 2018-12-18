@@ -1,5 +1,5 @@
 pkgname=mingw-w64-ffmpeg-zeranoe
-pkgver=4.0
+pkgver=4.1
 pkgrel=1
 epoch=1
 pkgdesc="Complete solution to record, convert and stream audio and video (mingw-w64, binary zeranoe build)"
@@ -11,14 +11,14 @@ options=(!strip !buildflags staticlibs)
 makedepends=()
 provides=('mingw-w64-ffmpeg')
 conflicts=('mingw-w64-ffmpeg')
-source=("https://ffmpeg.zeranoe.com/builds/win32/shared/ffmpeg-${pkgver}-win32-shared.zip"
-        "https://ffmpeg.zeranoe.com/builds/win32/dev/ffmpeg-${pkgver}-win32-dev.zip"
-        "https://ffmpeg.zeranoe.com/builds/win64/shared/ffmpeg-${pkgver}-win64-shared.zip"
-        "https://ffmpeg.zeranoe.com/builds/win64/dev/ffmpeg-${pkgver}-win64-dev.zip")
-sha256sums=('530c92df0ca14c35901b4b681847d62da3c50a0cc9b7ced37b04968f6b5c243d'
-            'e2f5200b5e73c4d0abb9b89c4ffc0438f92a0aadc54c81cf57e18c81a9f11c6b'
-            '8fe2d344463dbefc2db4239a4203a55ed0324faceaae57276a40c4fabda84c37'
-            'facced738eabfc53fa92834dea8b24426f64db61298688fed480145945be07fa')
+source=("https://ffmpeg.zeranoe.com/builds/win32/dev/ffmpeg-${pkgver}-win32-dev.zip"
+        "https://ffmpeg.zeranoe.com/builds/win32/shared/ffmpeg-${pkgver}-win32-shared.zip"
+        "https://ffmpeg.zeranoe.com/builds/win64/dev/ffmpeg-${pkgver}-win64-dev.zip"
+        "https://ffmpeg.zeranoe.com/builds/win64/shared/ffmpeg-${pkgver}-win64-shared.zip")
+sha256sums=('34bc5e471fb9160609abd6bc271e361050f3ff7376b1b8a0873cca02b38277c8'
+            'e692b18c01745d262c03294b382fd64df68fabe3c66aa4546a3ad3935175cde3'
+            '761ec79aa3dae66698c9791a2f0bb9da8794246f8356cadc741ddc0eabab0471'
+            'c4908c97436c946509dc365e421159274fa4b1e66dce6fb5b63d82a6294d5357')
 
 readversion() {
     libname=$(echo $2 | awk '{print toupper($0)}')
@@ -159,14 +159,12 @@ package() {
 prefix=/usr/$arch-w64-mingw32
 exec_prefix=\${prefix}
 libdir=\${prefix}/lib
-includedir=\${prefix}/include
 
 Name: lib$libname
 Description: $description
 Version: $version
 Requires.private: $deps
 Libs: -L\${libdir} -l$libname
-Cflags: -I\${includedir}
 EOF
         done
     done
