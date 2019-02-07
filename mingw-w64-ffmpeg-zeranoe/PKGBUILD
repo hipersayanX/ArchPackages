@@ -67,7 +67,6 @@ libdescription() {
     done
 }
 
-
 requires() {
     deps=('avcodec libswresample, libavutil'
           'avdevice libavfilter, libswscale, libpostproc, libavresample, libavformat, libavcodec, libswresample, libavutil'
