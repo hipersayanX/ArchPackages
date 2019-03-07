@@ -1,5 +1,5 @@
 pkgname=mingw-w64-ffmpeg-zeranoe
-pkgver=4.1
+pkgver=4.1.1
 pkgrel=1
 epoch=1
 pkgdesc="Complete solution to record, convert and stream audio and video (mingw-w64, binary zeranoe build)"
@@ -15,10 +15,10 @@ source=("https://ffmpeg.zeranoe.com/builds/win32/dev/ffmpeg-${pkgver}-win32-dev.
         "https://ffmpeg.zeranoe.com/builds/win32/shared/ffmpeg-${pkgver}-win32-shared.zip"
         "https://ffmpeg.zeranoe.com/builds/win64/dev/ffmpeg-${pkgver}-win64-dev.zip"
         "https://ffmpeg.zeranoe.com/builds/win64/shared/ffmpeg-${pkgver}-win64-shared.zip")
-sha256sums=('34bc5e471fb9160609abd6bc271e361050f3ff7376b1b8a0873cca02b38277c8'
-            'e692b18c01745d262c03294b382fd64df68fabe3c66aa4546a3ad3935175cde3'
-            '761ec79aa3dae66698c9791a2f0bb9da8794246f8356cadc741ddc0eabab0471'
-            'c4908c97436c946509dc365e421159274fa4b1e66dce6fb5b63d82a6294d5357')
+sha256sums=('f0f9595f193555773fcf3fbe1619b5a6c684543fd29ce014de5ce957c919982e'
+            'e1d5769421fb2b59e8c93131a5b5168c3cf081bd1ecbf860b85f6d3fadbe4bb2'
+            '3014c21b44f7896520cf22aed06f9efca9e1cf07fccbb21b169d48e0d399c4bf'
+            'cd052634d7e0fe906530814e94e9ed57228cc03a253640e87b063e5bf114903f')
 
 readversion() {
     libname=$(echo $2 | awk '{print toupper($0)}')

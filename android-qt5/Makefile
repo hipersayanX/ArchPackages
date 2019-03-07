@@ -50,5 +50,6 @@ prepare: PKGBUILD
 		$(LINK) "$$PWD/$$fileName" $$pkgfolder/$$fileName; \
 		$(COPY) *.patch $$pkgfolder; \
 		$(COPY) .gitignore $$pkgfolder; \
+		$(COPY) android-qt5.install $$pkgfolder/android-$$arch-qt5.install; \
 		sed "s/_android_arch=/_android_arch=$$arch/g" PKGBUILD > $$pkgfolder/PKGBUILD; \
 	done

@@ -28,7 +28,7 @@ fi
 
 pkgname=android-${_android_arch}-qt5
 pkgver=5.12.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Qt 5 for Android"
 arch=('x86_64')
 url='https://www.qt.io'
@@ -41,7 +41,7 @@ makedepends=('libgl'
              'gperf'
              'libxslt'
              'fontconfig')
-depends=('jre-openjdk-headless'
+depends=('jre8-openjdk-headless'
          'apache-ant'
          'android-ndk>=r18.b'
          "android-platform-$ANDROID_MINIMUM_PLATFORM"
@@ -76,6 +76,7 @@ options=('!strip'
          'staticlibs'
          '!emptydirs')
 _pkgfqn="qt-everywhere-src-${pkgver}"
+install="${pkgname}.install"
 source=("http://download.qt-project.org/official_releases/qt/${pkgver:0:4}/${pkgver}/single/${_pkgfqn}.tar.xz"
         "0001-Fix-clang-build.patch"
         "0002-Disable-mapbox.patch"
@@ -151,10 +152,10 @@ build() {
         -opensource
         -silent
         -prefix ${_pref}
-        -archdatadir ${_pref}/lib/qt
-        -datadir ${_pref}/share/qt
-        -examplesdir ${_pref}/share/qt/examples
-        -testsdir ${_pref}/share/qt/tests
+        -archdatadir ${_pref}/lib/qt5
+        -datadir ${_pref}/share/qt5
+        -examplesdir ${_pref}/share/qt5/examples
+        -testsdir ${_pref}/share/qt5/tests
         -xplatform android-clang
         -nomake tests
         -nomake examples
@@ -221,5 +222,5 @@ package() {
     find ${pkgdir}/${_pref}/lib -type f \( -name 'lib*.a' ! -name 'libQt5Bootstrap.a' ! -name 'libQt5QmlDevTools.a' \) -exec ${STRIP} {} \;
     find ${pkgdir}/${_pref}/lib/qt/plugins -type f -name 'lib*.so' -exec ${STRIP} {} \;
     sed -i '/QMAKE_PRL_BUILD_DIR/d' ${pkgdir}/${_pref}/lib/lib*.prl
-    sed -i 's/\"plugins\//\"lib\/qt\/plugins\//g' ${pkgdir}/${_pref}/lib/*-android-dependencies.xml
+    sed -i 's/\"plugins\//\"lib\/qt5\/plugins\//g' ${pkgdir}/${_pref}/lib/*-android-dependencies.xml
 }
