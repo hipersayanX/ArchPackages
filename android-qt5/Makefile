@@ -38,7 +38,6 @@ publish:
 	done
 
 prepare: PKGBUILD
-	_pkgfqn=$$(grep '_pkgfqn=' PKGBUILD | awk -F '=' '{print $$2}'); \
 	pkgver=$$(grep '^pkgver=' PKGBUILD | awk -F '=' '{print $$2}'); \
 	fileName=qt-everywhere-src-$$pkgver.tar.xz; \
 	if [ ! -f $$fileName ]; then \
@@ -52,4 +51,11 @@ prepare: PKGBUILD
 		$(COPY) .gitignore $$pkgfolder; \
 		$(COPY) android-qt5.install $$pkgfolder/android-$$arch-qt5.install; \
 		sed "s/_android_arch=/_android_arch=$$arch/g" PKGBUILD > $$pkgfolder/PKGBUILD; \
+	done
+
+install:
+	pkgver=$$(grep '^pkgver=' PKGBUILD | awk -F '=' '{print $$2}'); \
+	pkgrel=$$(grep '^pkgrel=' PKGBUILD | awk -F '=' '{print $$2}'); \
+	for arch in $(ARCHS); do \
+		pacman -U android-$$arch-qt5/android-$$arch-qt5-$$pkgver-$$pkgrel-x86_64.pkg.tar.xz --noconfirm; \
 	done
