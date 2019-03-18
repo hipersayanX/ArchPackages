@@ -43,6 +43,7 @@ prepare: PKGBUILD
 	if [ ! -f $$fileName ]; then \
 		$(DOWNLOAD) http://download.qt-project.org/official_releases/qt/$${pkgver:0:4}/$$pkgver/single/$$fileName; \
 	fi; \
+	md5=$$(md5sum qt-everywhere-src-5.12.2.tar.xz | awk '{print $$1}'); \
 	for arch in $(ARCHS); do \
 		pkgfolder=android-$$arch-$(PKGBASE); \
 		$(MKDIR) $$pkgfolder; \
@@ -50,7 +51,9 @@ prepare: PKGBUILD
 		$(COPY) *.patch $$pkgfolder; \
 		$(COPY) .gitignore $$pkgfolder; \
 		$(COPY) android-qt5.install $$pkgfolder/android-$$arch-qt5.install; \
-		sed "s/_android_arch=/_android_arch=$$arch/g" PKGBUILD > $$pkgfolder/PKGBUILD; \
+		$(COPY) PKGBUILD $$pkgfolder; \
+		sed -i "s/_android_arch=/_android_arch=$$arch/g" $$pkgfolder/PKGBUILD; \
+		sed -i "s/md5sums=('SKIP'/md5sums=('$$md5'/g" $$pkgfolder/PKGBUILD; \
 	done
 
 install:
