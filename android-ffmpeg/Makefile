@@ -1,4 +1,4 @@
-PKGBASE = qt5
+PKGBASE = ffmpeg
 ARCHS = aarch64 armv7a-eabi x86 x86-64
 MKDIR = mkdir -pv
 COPY = cp -vf
@@ -23,6 +23,7 @@ clean:
 		pushd android-$$arch-$(PKGBASE); \
 			$(RMDIR) pkg; \
 			$(RMDIR) src; \
+			$(RMDIR) ffmpeg; \
 			$(REMOVE) *.tar.xz; \
 		popd; \
 	done
@@ -37,30 +38,21 @@ publish:
 	done
 
 prepare: PKGBUILD
-	pkgver=$$(grep '^pkgver=' PKGBUILD | awk -F '=' '{print $$2}'); \
-	fileName=qt-everywhere-src-$$pkgver.tar.xz; \
-	if [ ! -f $$fileName ]; then \
-		$(DOWNLOAD) http://download.qt-project.org/official_releases/qt/$${pkgver:0:4}/$$pkgver/single/$$fileName; \
-	fi; \
-	md5=$$(md5sum qt-everywhere-src-5.12.2.tar.xz | awk '{print $$1}'); \
 	for arch in $(ARCHS); do \
 		pkgfolder=android-$$arch-$(PKGBASE); \
 		$(MKDIR) $$pkgfolder; \
-		$(LINK) "$$PWD/$$fileName" $$pkgfolder/$$fileName; \
 		$(COPY) *.patch $$pkgfolder; \
 		$(COPY) .gitignore $$pkgfolder; \
-		$(COPY) android-$(PKGBASE).install $$pkgfolder/android-$$arch-$(PKGBASE).install; \
 		$(COPY) android-env.sh $$pkgfolder; \
 		$(COPY) PKGBUILD $$pkgfolder; \
 		sed -i "s/_android_arch=/_android_arch=$$arch/g" $$pkgfolder/PKGBUILD; \
-		sed -i "s/md5sums=('SKIP'/md5sums=('$$md5'/g" $$pkgfolder/PKGBUILD; \
 	done
 
 install:
 	pkgver=$$(grep '^pkgver=' PKGBUILD | awk -F '=' '{print $$2}'); \
 	pkgrel=$$(grep '^pkgrel=' PKGBUILD | awk -F '=' '{print $$2}'); \
 	for arch in $(ARCHS); do \
-		pacman -U android-$$arch-$(PKGBASE)/android-$$arch-$(PKGBASE)-$$pkgver-$$pkgrel-x86_64.pkg.tar.xz --noconfirm; \
+		pacman -U android-$$arch-$(PKGBASE)/android-$$arch-$(PKGBASE)-$$pkgver-$$pkgrel-any.pkg.tar.xz --noconfirm; \
 	done
 
 repo:
