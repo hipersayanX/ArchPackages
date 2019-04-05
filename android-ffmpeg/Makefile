@@ -7,6 +7,7 @@ RMDIR = rm -rvf
 LINK = ln -fvs
 DOWNLOAD = wget -c
 MAKEPKG = MAKEFLAGS=-j4 makepkg -sf
+MAKEPKGDO = makepkg -do
 
 all: prepare
 	for arch in $(ARCHS); do \
@@ -23,7 +24,8 @@ clean:
 		pushd android-$$arch-$(PKGBASE); \
 			$(RMDIR) pkg; \
 			$(RMDIR) src; \
-			$(RMDIR) ffmpeg; \
+			$(RMDIR) $(PKGBASE); \
+			$(REMOVE) *.tar.gz; \
 			$(REMOVE) *.tar.xz; \
 		popd; \
 	done
@@ -43,9 +45,17 @@ prepare: PKGBUILD
 		$(MKDIR) $$pkgfolder; \
 		$(COPY) *.patch $$pkgfolder; \
 		$(COPY) .gitignore $$pkgfolder; \
-		$(COPY) android-env.sh $$pkgfolder; \
+		$(COPY) ../android-env.sh $$pkgfolder; \
 		$(COPY) PKGBUILD $$pkgfolder; \
 		sed -i "s/_android_arch=/_android_arch=$$arch/g" $$pkgfolder/PKGBUILD; \
+	done
+
+do:
+	for arch in $(ARCHS); do \
+		pkgfolder=android-$$arch-$(PKGBASE); \
+		cd $$pkgfolder; \
+		$(MAKEPKGDO); \
+		cd ..; \
 	done
 
 install:
