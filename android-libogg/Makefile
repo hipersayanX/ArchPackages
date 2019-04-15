@@ -40,17 +40,27 @@ publish:
 	done
 
 prepare: PKGBUILD
+	srcUrl=$$(sh -c 'PATH="$$PWD/..:$$PATH" source $$PWD/PKGBUILD; echo $${source[0]}'); \
+	fileName=$$(basename "$$srcUrl"); \
+	if [ ! -f $$fileName ]; then \
+		$(DOWNLOAD) "$$srcUrl"; \
+	fi; \
+	checksum=$$(grep '.sums=' PKGBUILD | awk -F 's=' '{print $$1}'); \
+	sum=$$($$checksum $$fileName | awk '{print $$1}'); \
 	for arch in $(ARCHS); do \
 		pkgfolder=android-$$arch-$(PKGBASE); \
 		$(MKDIR) $$pkgfolder; \
+		$(LINK) ../$$fileName $$pkgfolder/$$fileName; \
 		$(COPY) *.patch $$pkgfolder; \
 		$(COPY) .gitignore $$pkgfolder; \
+		$(COPY) android-$(PKGBASE).install $$pkgfolder/android-$$arch-$(PKGBASE).install; \
 		$(COPY) ../android-env.sh $$pkgfolder; \
 		$(COPY) PKGBUILD $$pkgfolder; \
 		sed -i "s/_android_arch=/_android_arch=$$arch/g" $$pkgfolder/PKGBUILD; \
+		sed -i "s/$$checksum""s=('SKIP'/$$checksum""s=('$$sum'/g" $$pkgfolder/PKGBUILD; \
 	done
 
-do: prepare
+do:
 	for arch in $(ARCHS); do \
 		pkgfolder=android-$$arch-$(PKGBASE); \
 		cd $$pkgfolder; \
@@ -62,7 +72,7 @@ install:
 	pkgver=$$(grep '^pkgver=' PKGBUILD | awk -F '=' '{print $$2}'); \
 	pkgrel=$$(grep '^pkgrel=' PKGBUILD | awk -F '=' '{print $$2}'); \
 	for arch in $(ARCHS); do \
-		pacman -U android-$$arch-$(PKGBASE)/android-$$arch-$(PKGBASE)-$$pkgver-$$pkgrel-any.pkg.tar.xz --noconfirm; \
+		pacman -U android-$$arch-$(PKGBASE)/android-$$arch-$(PKGBASE)-$$pkgver-$$pkgrel-*.pkg.tar.xz --noconfirm; \
 	done
 
 repo:
