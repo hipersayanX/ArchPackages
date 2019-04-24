@@ -6,16 +6,12 @@ source android-env.sh ${_android_arch}
 
 pkgname=android-${_android_arch}-libvpx
 pkgver=1.8.0
-pkgrel=1
+pkgrel=2
 pkgdesc="VP8 and VP9 codec (android)"
 arch=('any')
 url="http://www.webmproject.org/"
 license=('BSD')
-
-if [ -z "${ANDROID_NO_DEPS}" ]; then
-    depends=('android-ndk')
-fi
-
+depends=('android-ndk')
 options=(!strip !buildflags staticlibs !emptydirs)
 makedepends=('android-pkg-config' 'yasm')
 source=(https://github.com/webmproject/libvpx/archive/v${pkgver}.tar.gz)

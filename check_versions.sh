@@ -1,11 +1,14 @@
 #!/bin/sh
 
-packages=('android-ffmpeg ffmpeg'
+packages=('android-bzip2 bzip2'
+          'android-ffmpeg ffmpeg'
           'android-libogg libogg'
+          'android-libtheora libtheora'
           'android-libvorbis libvorbis'
           'android-libvpx libvpx'
           'android-opus opus'
           'android-qt5 qt5-base'
+          'android-zlib zlib'
           'mingw-w64-ffmpeg-zeranoe ffmpeg')
 
 export LC_ALL=C

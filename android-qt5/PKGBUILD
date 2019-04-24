@@ -9,8 +9,8 @@ _android_arch=
 source android-env.sh ${_android_arch}
 
 pkgname=android-${_android_arch}-qt5
-pkgver=5.12.2
-pkgrel=4
+pkgver=5.12.3
+pkgrel=1
 pkgdesc="Qt 5 for Android"
 arch=('any')
 url='https://www.qt.io'
@@ -23,22 +23,14 @@ makedepends=('libgl'
              'gperf'
              'libxslt'
              'fontconfig')
-
-if [ -z "${ANDROID_NO_DEPS}" ]; then
-    depends=('java-runtime-headless-openjdk<=8'
-            'apache-ant'
-            'android-pkg-config'
-            'android-ndk'
-            "android-platform-$ANDROID_MINIMUM_PLATFORM"
-            'android-sdk'
-            'android-sdk-build-tools'
-            'android-sdk-platform-tools')
-else
-    depends=('java-runtime-headless-openjdk<=8'
-             'apache-ant'
-             'android-pkg-config')
-fi
-
+depends=('java-runtime-headless-openjdk<=8'
+        'apache-ant'
+        'android-pkg-config'
+        'android-ndk'
+        "android-platform-$ANDROID_MINIMUM_PLATFORM"
+        'android-sdk'
+        'android-sdk-build-tools'
+        'android-sdk-platform-tools')
 groups=('android-qt5')
 
 case "$_android_arch" in
