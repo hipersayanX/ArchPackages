@@ -1,4 +1,3 @@
-PKGBASE = lame
 ARCHS = aarch64 armv7a-eabi x86 x86-64
 MKDIR = mkdir -pv
 COPY = cp -vf
@@ -10,8 +9,9 @@ MAKEPKG = MAKEFLAGS=-j4 makepkg -sf
 MAKEPKGDO = makepkg -do
 
 all: prepare
+	pkgname=$$(grep '^pkgname=android-' "$$PWD/PKGBUILD" | sed 's/pkgname=android-$${_android_arch}-//'); \
 	for arch in $(ARCHS); do \
-		pkgfolder=android-$$arch-$(PKGBASE); \
+		pkgfolder=android-$$arch-$$pkgname; \
 		cd $$pkgfolder; \
 		$(MAKEPKG); \
 		cd ..; \
@@ -20,20 +20,22 @@ all: prepare
 .PHONY: clean
 
 clean:
+	pkgname=$$(grep '^pkgname=android-' "$$PWD/PKGBUILD" | sed 's/pkgname=android-$${_android_arch}-//'); \
 	for arch in $(ARCHS) ; do \
-		pushd android-$$arch-$(PKGBASE); \
+		pushd android-$$arch-$$pkgname; \
 			$(RMDIR) pkg; \
 			$(RMDIR) src; \
-			$(RMDIR) $(PKGBASE); \
-			$(REMOVE) *.tar.bz2; \
-			$(REMOVE) *.tar.gz; \
-			$(REMOVE) *.tar.xz; \
+			$(RMDIR) $$pkgname; \
+			$(REMOVE) *.bz2; \
+			$(REMOVE) *.gz; \
+			$(REMOVE) *.xz; \
 		popd; \
 	done
 
 publish:
+	pkgname=$$(grep '^pkgname=android-' "$$PWD/PKGBUILD" | sed 's/pkgname=android-$${_android_arch}-//'); \
 	for arch in $(ARCHS); do \
-		pkgfolder=android-$$arch-$(PKGBASE); \
+		pkgfolder=android-$$arch-$$pkgname; \
 		cd $$pkgfolder; \
 		mksrcinfo; \
 		git add .; \
@@ -41,41 +43,49 @@ publish:
 	done
 
 prepare: PKGBUILD
-	srcUrl=$$(sh -c 'PATH="$$PWD/..:$$PATH" source $$PWD/PKGBUILD; echo $${source[0]}'); \
+	pkgname=$$(grep '^pkgname=android-' "$$PWD/PKGBUILD" | sed 's/pkgname=android-$${_android_arch}-//'); \
+	srcUrl=$$(sh -c 'source $$PWD/PKGBUILD; echo $${source[0]}'); \
 	fileName=$$(basename "$$srcUrl"); \
-	if [ ! -f $$fileName ]; then \
+	if [ ! -f "$$fileName" ] && [[ ! "$$srcUrl" =~ ^git\+.* ]]; then \
 		$(DOWNLOAD) "$$srcUrl"; \
 	fi; \
 	checksum=$$(grep '.sums=' PKGBUILD | awk -F 's=' '{print $$1}'); \
-	sum=$$($$checksum $$fileName | awk '{print $$1}'); \
+	if [[ ! "$$srcUrl" =~ ^git\+.* ]]; then \
+		sum=$$($$checksum $$fileName | awk '{print $$1}'); \
+	fi; \
 	for arch in $(ARCHS); do \
-		pkgfolder=android-$$arch-$(PKGBASE); \
+		pkgfolder=android-$$arch-$$pkgname; \
 		$(MKDIR) $$pkgfolder; \
-		$(LINK) ../$$fileName $$pkgfolder/$$fileName; \
 		$(COPY) *.patch $$pkgfolder; \
 		$(COPY) .gitignore $$pkgfolder; \
-		$(COPY) android-$(PKGBASE).install $$pkgfolder/android-$$arch-$(PKGBASE).install; \
+		$(COPY) android-$$pkgname.install $$pkgfolder/android-$$arch-$$pkgname.install; \
 		$(COPY) PKGBUILD $$pkgfolder; \
 		sed -i "s/_android_arch=/_android_arch=$$arch/g" $$pkgfolder/PKGBUILD; \
-		sed -i "s/$$checksum""s=('SKIP'/$$checksum""s=('$$sum'/g" $$pkgfolder/PKGBUILD; \
+		if [[ ! "$$srcUrl" =~ ^git\+.* ]]; then \
+			$(LINK) ../$$fileName $$pkgfolder/$$fileName; \
+			sed -i "s/$$checksum""s=('SKIP'/$$checksum""s=('$$sum'/g" $$pkgfolder/PKGBUILD; \
+		fi; \
 	done
 
 do:
+	pkgname=$$(grep '^pkgname=android-' "$$PWD/PKGBUILD" | sed 's/pkgname=android-$${_android_arch}-//'); \
 	for arch in $(ARCHS); do \
-		pkgfolder=android-$$arch-$(PKGBASE); \
+		pkgfolder=android-$$arch-$$pkgname; \
 		cd $$pkgfolder; \
 		$(MAKEPKGDO); \
 		cd ..; \
 	done
 
 install:
+	pkgname=$$(grep '^pkgname=android-' "$$PWD/PKGBUILD" | sed 's/pkgname=android-$${_android_arch}-//'); \
 	pkgver=$$(grep '^pkgver=' PKGBUILD | awk -F '=' '{print $$2}'); \
 	pkgrel=$$(grep '^pkgrel=' PKGBUILD | awk -F '=' '{print $$2}'); \
 	for arch in $(ARCHS); do \
-		pacman -U android-$$arch-$(PKGBASE)/android-$$arch-$(PKGBASE)-$$pkgver-$$pkgrel-*.pkg.tar.xz --noconfirm; \
+		pacman -U android-$$arch-$$pkgname/android-$$arch-$$pkgname-$$pkgver-$$pkgrel-*.pkg.tar.xz --noconfirm; \
 	done
 
 repo:
+	pkgname=$$(grep '^pkgname=android-' "$$PWD/PKGBUILD" | sed 's/pkgname=android-$${_android_arch}-//'); \
 	for arch in $(ARCHS); do \
-		git clone ssh://aur@aur.archlinux.org/android-$$arch-$(PKGBASE).git; \
+		git clone ssh://aur@aur.archlinux.org/android-$$arch-$$pkgname.git; \
 	done
