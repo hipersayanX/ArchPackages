@@ -2,12 +2,18 @@
 
 packages=('android-bzip2 bzip2'
           'android-ffmpeg ffmpeg'
+          'android-giflib giflib'
+          'android-lame lame'
+          'android-libjpeg-turbo libjpeg-turbo'
           'android-libogg libogg'
           'android-libtheora libtheora'
           'android-libvorbis libvorbis'
           'android-libvpx libvpx'
           'android-opus opus'
           'android-qt5 qt5-base'
+          'android-speex speex'
+          'android-speexdsp speexdsp'
+          'android-xz xz'
           'android-zlib zlib'
           'mingw-w64-ffmpeg-zeranoe ffmpeg')
 

@@ -3,32 +3,35 @@
 _android_arch=
 source android-env ${_android_arch}
 
-pkgname=android-${_android_arch}-libogg
-pkgver=1.3.3
-pkgrel=4
-pkgdesc="Ogg bitstream and framing library (android)"
+pkgname=android-${_android_arch}-lame
+pkgver=3.100
+pkgrel=5
+pkgdesc="A high quality MPEG Audio Layer III (MP3) encoder (android)"
 arch=('any')
-url="http://xiph.org"
-license=('BSD')
+url="http://lame.sourceforge.net/"
+license=('LGPL')
 depends=('android-ndk')
 options=(!strip !buildflags staticlibs !emptydirs)
-makedepends=('android-configure')
-source=("http://downloads.xiph.org/releases/ogg/libogg-${pkgver}.tar.gz")
-sha256sums=('c2e8a485110b97550f453226ec644ebac6cb29d1caef2902c007edab4308d985')
+makedepends=('android-configure' 'nasm')
+source=("http://downloads.sourceforge.net/lame/lame-$pkgver.tar.gz")
+md5sums=('83e260acbe4389b54fe08e0bdbf7cddb')
 
 prepare() {
     check_ndk_version_ge_than 18.0
 }
 
 build() {
-    cd "${srcdir}"/libogg-${pkgver}
+    cd "${srcdir}"/lame-${pkgver}
 
-    android-${_android_arch}-configure
+    android-${_android_arch}-configure \
+        --disable-frontend \
+        --enable-nasm
+
     make $MAKEFLAGS
 }
 
 package() {
-    cd "${srcdir}"/libogg-${pkgver}
+    cd "${srcdir}"/lame-${pkgver}
 
     make DESTDIR="$pkgdir" install
     rm -r "${pkgdir}"/${ANDROID_PREFIX_SHARE}

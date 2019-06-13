@@ -25,6 +25,7 @@ clean:
 			$(RMDIR) pkg; \
 			$(RMDIR) src; \
 			$(RMDIR) $(PKGBASE); \
+			$(REMOVE) *.tar.bz2; \
 			$(REMOVE) *.tar.gz; \
 			$(REMOVE) *.tar.xz; \
 		popd; \
@@ -54,7 +55,6 @@ prepare: PKGBUILD
 		$(COPY) *.patch $$pkgfolder; \
 		$(COPY) .gitignore $$pkgfolder; \
 		$(COPY) android-$(PKGBASE).install $$pkgfolder/android-$$arch-$(PKGBASE).install; \
-		$(COPY) ../android-env.sh $$pkgfolder; \
 		$(COPY) PKGBUILD $$pkgfolder; \
 		sed -i "s/_android_arch=/_android_arch=$$arch/g" $$pkgfolder/PKGBUILD; \
 		sed -i "s/$$checksum""s=('SKIP'/$$checksum""s=('$$sum'/g" $$pkgfolder/PKGBUILD; \
