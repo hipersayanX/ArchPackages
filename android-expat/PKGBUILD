@@ -16,8 +16,6 @@ makedepends=('android-configure')
 source=("http://downloads.sourceforge.net/expat/expat-${pkgver}.tar.bz2")
 sha256sums=('cbc9102f4a31a8dafd42d642e9a3aa31e79a0aedaa1f6efd2795ebc83174ec18')
 
-_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
-
 prepare() {
     check_ndk_version_ge_than 18.0
 }

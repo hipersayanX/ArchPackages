@@ -17,6 +17,7 @@ packages=('android-bzip2 bzip2'
           'android-qt5 qt5-base'
           'android-speex speex'
           'android-speexdsp speexdsp'
+          'android-x265 x265'
           'android-xz xz'
           'android-zlib zlib'
           'mingw-w64-ffmpeg-zeranoe ffmpeg')
