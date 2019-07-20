@@ -1,6 +1,7 @@
 #!/bin/sh
 
 packages=('android-bzip2 bzip2'
+          'android-expat expat'
           'android-ffmpeg ffmpeg'
           'android-giflib giflib'
           'android-lame lame'
