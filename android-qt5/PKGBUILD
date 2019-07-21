@@ -5,7 +5,6 @@
 # Contributor: Martchus <martchus@gmx.net>
 
 _android_arch=
-source android-env ${_android_arch}
 
 pkgname=android-${_android_arch}-qt5
 pkgver=5.13.0
@@ -66,6 +65,8 @@ md5sums=('3c168d9a3a08248ff36f4f54c82e437f'
 
 prepare() {
     cd ${_pkgfqn}
+    source android-env ${_android_arch}
+
     check_ndk_version_ge_than 18.0
 
     # Platform specific patches.
@@ -80,6 +81,7 @@ prepare() {
 
 build() {
     cd ${_pkgfqn}
+    source android-env ${_android_arch}
 
     unset CC
     unset CXX
@@ -152,6 +154,7 @@ build() {
 
 package() {
     cd ${_pkgfqn}
+    source android-env ${_android_arch}
 
     make INSTALL_ROOT=${pkgdir} install
     find ${pkgdir}/${ANDROID_PREFIX_BIN} -type f ! -name '*.pl' -exec strip -s {} \;

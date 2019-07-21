@@ -1,7 +1,6 @@
 # Maintainer: Gonzalo Exequiel Pedone <hipersayan DOT x AT gmail DOT com>
 
 _android_arch=
-source android-env ${_android_arch}
 
 pkgname=android-${_android_arch}-ffmpeg
 pkgver=4.1.4
@@ -28,12 +27,15 @@ sha256sums=('f1f049a82fcfbf156564e73a3935d7e750891fab2abf302e735104fd4050a7e1'
 
 prepare() {
     cd "${srcdir}"/ffmpeg-${pkgver}
+    source android-env ${_android_arch}
+
     check_ndk_version_ge_than 18.0
     patch -Np1 -i ../configure.patch
 }
 
 build() {
     cd "${srcdir}"/ffmpeg-${pkgver}
+    source android-env ${_android_arch}
 
     unset CC
     unset CXX
@@ -114,6 +116,8 @@ build() {
 
 package() {
     cd "${srcdir}"/ffmpeg-${pkgver}
+    source android-env ${_android_arch}
+
     make DESTDIR="$pkgdir" install
     rm -r "${pkgdir}"/${ANDROID_PREFIX_SHARE}
     ${ANDROID_STRIP} -g --strip-unneeded "${pkgdir}"/${ANDROID_PREFIX_LIB}/*.so
