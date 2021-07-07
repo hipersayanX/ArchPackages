@@ -74,6 +74,9 @@ md5sums=('e1447db4f06c841d8947f0a6ce83a7b5'
 
 prepare() {
     cd ${_pkgfqn}
+
+    # git clone --branch kde/5.15 --single-branch --recurse-submodules https://invent.kde.org/qt/qt/qt5.git
+
     source android-env ${_android_arch}
 
     check_ndk_version_ge_than 18.0
