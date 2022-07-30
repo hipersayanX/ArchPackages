@@ -3,7 +3,7 @@
 _android_arch=
 
 pkgname=android-${_android_arch}-libiconv
-pkgver=1.16
+pkgver=1.17
 pkgrel=1
 pkgdesc="Provides GNU libiconv.so and libcharset.so (android)"
 arch=('any')
@@ -13,7 +13,7 @@ depends=('android-ndk')
 options=(!strip !buildflags staticlibs !emptydirs)
 makedepends=('android-configure')
 source=("http://ftp.gnu.org/pub/gnu/libiconv/libiconv-$pkgver.tar.gz")
-md5sums=('7d2a800b952942bb2880efb00cfd524c')
+md5sums=('d718cd5a59438be666d1575855be72c3')
 
 build() {
     cd "${srcdir}"/libiconv-${pkgver}

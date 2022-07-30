@@ -26,6 +26,7 @@ clean:
 			$(RMDIR) pkg; \
 			$(RMDIR) src; \
 			$(RMDIR) $$pkgname; \
+			$(REMOVE) *.sig; \
 			$(REMOVE) *.bz2; \
 			$(REMOVE) *.gz; \
 			$(REMOVE) *.xz; \
