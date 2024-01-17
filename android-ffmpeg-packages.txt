@@ -14,7 +14,6 @@ android-libbluray
 android-libffi *
 android-libmodplug
 android-libsoxr
-android-libtasn1 <-
 android-nettle
 android-opencore-amr
 android-p11-kit

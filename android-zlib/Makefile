@@ -7,6 +7,7 @@ LINK = ln -fvs
 DOWNLOAD = wget -c
 MAKEPKG = MAKEFLAGS=-j4 makepkg -sf
 MAKEPKGDO = makepkg -do
+PKGEXT = pkg.tar.zst
 
 all: prepare
 	pkgname=$$(grep '^pkgname=android-' "$$PWD/PKGBUILD" | sed 's/pkgname=android-$${_android_arch}-//'); \
@@ -86,7 +87,7 @@ install:
 	pkgver=$$(grep '^pkgver=' PKGBUILD | awk -F '=' '{print $$2}'); \
 	pkgrel=$$(grep '^pkgrel=' PKGBUILD | awk -F '=' '{print $$2}'); \
 	for arch in $(ARCHS); do \
-		pacman -U android-$$arch-$$pkgname/android-$$arch-$$pkgname-$$pkgver-$$pkgrel-*.pkg.tar.xz --noconfirm; \
+		pacman -U android-$$arch-$$pkgname/android-$$arch-$$pkgname-$$pkgver-$$pkgrel-*.$(PKGEXT) --noconfirm; \
 	done
 
 repo:

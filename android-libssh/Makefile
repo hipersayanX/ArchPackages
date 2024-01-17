@@ -29,6 +29,7 @@ clean:
 			$(REMOVE) *.bz2; \
 			$(REMOVE) *.gz; \
 			$(REMOVE) *.xz; \
+			$(REMOVE) *.zst; \
 		popd; \
 	done
 
@@ -86,7 +87,7 @@ install:
 	pkgver=$$(grep '^pkgver=' PKGBUILD | awk -F '=' '{print $$2}'); \
 	pkgrel=$$(grep '^pkgrel=' PKGBUILD | awk -F '=' '{print $$2}'); \
 	for arch in $(ARCHS); do \
-		pacman -U android-$$arch-$$pkgname/android-$$arch-$$pkgname-$$pkgver-$$pkgrel-*.pkg.tar.xz --noconfirm; \
+		pacman -U android-$$arch-$$pkgname/android-$$arch-$$pkgname-$$pkgver-$$pkgrel-*.pkg.tar.zst --noconfirm; \
 	done
 
 repo:
