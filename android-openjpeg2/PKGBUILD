@@ -25,21 +25,21 @@ build() {
 
     mkdir "build-${_android_arch}-static" && pushd "build-${_android_arch}-static"
     android-${_android_arch}-cmake \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_DOC=OFF \
-    -DBUILD_TESTING=OFF \
-    -DBUILD_SHARED_LIBS=OFF \
-    ..
+        -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_DOC=OFF \
+        -DBUILD_TESTING=OFF \
+        -DBUILD_SHARED_LIBS=OFF \
+        ..
     make $MAKEFLAGS
     popd
 
     mkdir "build-${_android_arch}-shared" && pushd "build-${_android_arch}-shared"
     android-${_android_arch}-cmake \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_DOC=OFF \
-    -DBUILD_TESTING=OFF \
-    -DBUILD_PKGCONFIG_FILES=ON \
-    ..
+        -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_DOC=OFF \
+        -DBUILD_TESTING=OFF \
+        -DBUILD_PKGCONFIG_FILES=ON \
+        ..
     make $MAKEFLAGS
     popd
 }
