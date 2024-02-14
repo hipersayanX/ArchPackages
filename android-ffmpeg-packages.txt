@@ -4,28 +4,13 @@ ffmpeg
 |-cairo
 | |-fontconfig
 | | |-expat
-| | |-freetype2
-| | | |-brotli
-| | | |-bzip2
-| | | |-libpng
-| | | | |-zlib
-| | | |-zlib
-| | | `-harfbuzz
-| | |   |-freetype2
-| | |   |-graphite
-| | |   |-glib2
-| | |   | |-libffi
-| | |   | |-pcre2
-| | |   | | |-readline
-| | |   | | |-zlib
-| | |   | | |-bzip2
-| | |   | |-util-linux-libs
-| | |   | |-zlib
-| | |   | |-libffi
-| | |   | `-util-linux-libs
-| | |   `-glib2
-| | |-expat provides libexpat.so=1-64
 | | `-freetype2
+| |   |-brotli
+| |   |-bzip2
+| |   |-libpng
+| |   | `-zlib
+| |   |-zlib
+| |   `-harfbuzz
 | |-freetype2
 | |-glib2
 | |-libpng
@@ -40,20 +25,15 @@ ffmpeg
 | |-libxcb
 | |-libxext
 | | |-libx11
-| | |-glibc
 | | `-xorgproto
 | |-libxrender
 | | `-libx11
 | |-lzo
-| | `-glibc
 | |-pixman
-| | `-glibc
 | `-zlib
 |-fontconfig
 |-fribidi
-| `-glibc
 |-glib2
-|-glibc
 |-gmp
 |-gnutls
 | |-gmp
@@ -63,78 +43,59 @@ ffmpeg
 | |-nettle
 | | `-gmp
 | |-libp11-kit
-| | |-glibc
 | | |-libffi
 | | `-libtasn1
 | |-libidn2
-| | |-libunistring
+| | `-libunistring
 | |-zstd
-| | |-glibc
-| | |-gcc-libs
 | | |-zlib
 | | |-xz
 | | `-lz4
-| |-libidn2 provides libidn2.so=0-64
+| |-libidn2
 | |-libunistring
 | `-brotli
 |-gsm
 |-lame
-|-libass provides libass.so=9-64
+|-libass
 | |-fontconfig
 | |-fribidi
-| |-glibc
 | |-harfbuzz
-| |-freetype2 provides libfreetype.so=6-64
+| |-freetype2
 | `-libunibreak
 |-libavc1394
-| |-glibc
 | `-libraw1394
-|   `-glibc
-|-libbluray provides libbluray.so=2-64
+|-libbluray
 | |-fontconfig
-| |-freetype2 provides libfreetype.so=6-64
+| |-freetype2
 | `-libxml2
 |   |-icu
-|   | |-gcc-libs
-|   | |-glibc
-|   | `-bash provides sh
 |   |-ncurses
 |   |-readline
 |   |-xz
 |   `-zlib
-|-libbs2b provides libbs2b.so=0-64
-| |-libsndfile
-| |-gcc-libs
-| `-libsndfile provides libsndfile.so=1-64
-|-dav1d provides libdav1d.so=7-64
-| `-glibc
+|-libbs2b
+| `-libsndfile
+|-dav1d
 |-libdrm
-| |-libpciaccess
-| | |-glibc
-| | `-zlib
-| `-glibc
-|-freetype2 provides libfreetype.so=6-64
-|-harfbuzz provides libharfbuzz.so=0-64
+| `-libpciaccess
+|   `-zlib
+|-freetype2
+|-harfbuzz
 |-libiec61883
 | `-libraw1394
-|-libjxl provides libjxl.so=0.9-64
+|-libjxl
 | |-brotli
 | |-giflib
-| | `-glibc
 | |-gperftools
-| | |-gcc-libs
-| | |-glibc
 | | `-libunwind
 | |-highway
-| | `-gcc-libs
 | |-libjpeg-turbo
-| | `-glibc
 | |-libpng
 | `-openexr
 |   |-imath
 |   `-libdeflate
 |-libmodplug
-|-libopenmpt provides libopenmpt.so=0-64
+|-libopenmpt
 | |-flac
 | |-libogg
 | |-libsndfile
@@ -142,28 +103,22 @@ ffmpeg
 | |-mpg123
 | |-portaudio
 | `-zlib
-|-libplacebo provides libplacebo.so=338-64
+|-libplacebo
 | |-lcms2
 | | `-libtiff
-| |   |-gcc-libs
-| |   |-glibc
 | |   |-jbigkit
-| |   | `-glibc
 | |   |-libjpeg-turbo
 | |   |-zlib
 | |   |-xz
 | |   `-zstd
-| |-lcms2 provides liblcms2.so=2-64
+| |-lcms2
 | |-shaderc
 | | |-glslang
 | | `-spirv-tools
-| |-shaderc provides libshaderc_shared.so=1-64
-| |-glibc
-| |-gcc-libs
+| |-shaderc
 | |-libunwind
-| |-libdovi provides libdovi.so=3-64
+| |-libdovi
 | `-xxhash
-|-libpulse
 |-rav1e
 |-libraw1394
 |-librsvg
@@ -173,12 +128,10 @@ ffmpeg
 | | |-glib2
 | | |-libpng
 | | |-libtiff
-| | |-libjpeg-turbo provides libjpeg
+| | |-libjpeg-turbo
 | | `-shared-mime-info
 | |   |-libxml2
-| |   |-glib2
-| |   |-glibc
-| |   `-gcc-libs
+| |   `-glib2
 | |-glib2
 | |-harfbuzz
 | |-libxml2
@@ -187,46 +140,30 @@ ffmpeg
 |   |-fribidi
 |   |-harfbuzz
 |   |-libthai
-|   | |-glibc
 |   | `-libdatrie
-|   |   `-glibc
 |   `-libxft
 |     |-fontconfig
 |     `-libxrender
 |-rubberband provides librubberband.so=2-64
 | |-fftw
-| | |-bash
-| | |-gcc-libs
-| | |-glibc
 | | `-openmpi
-| |   |-gcc-libs
-| |   |-glibc
 | |   |-hwloc
 | |   | |-glibc
 | |   | |-libtool
-| |   | | |-bash provides sh
-| |   | | |-tar
-| |   | | | |-glibc
-| |   | | | `-acl
-| |   | | `-glibc
+| |   | | `-tar
+| |   | |   `-acl
 | |   | `-libpciaccess
 | |   |-libevent
 | |   |-libnl
-| |   | |-glibc
-| |   | `-gcc-libs
 | |   |-openpmix
-| |   | |-glibc
 | |   | |-hwloc
 | |   | |-libevent
-| |   | |-libevent provides libevent_core-2.1.so=7-64
-| |   | |-libevent provides libevent_pthreads-2.1.so=7-64
+| |   | |-libevent
 | |   | `-zlib
 | |   |-openpmix provides libpmix.so=2-64
 | |   |-openssh
 | |   | |-glibc
 | |   | |-krb5
-| |   | |-krb5 provides libkrb5.so=3-64
-| |   | |-krb5 provides libgssapi_krb5.so=2-64
 | |   | |-ldns
 | |   | | |-openssl
 | |   | | `-dnssec-anchors
@@ -235,68 +172,46 @@ ffmpeg
 | |   | |-libxcrypt provides libcrypt.so=2-64
 | |   | |-openssl
 | |   | |-pam
-| |   | |-pam provides libpam.so=0-64
 | |   | `-zlib
 | |   |-prrte
-| |   | |-glibc
 | |   | |-hwloc
 | |   | |-libevent
-| |   | |-openpmix
-| |   | `-openpmix provides libpmix.so=2-64
+| |   | `-openpmix
 | |   `-zlib
-| |-fftw provides libfftw3.so=3-64
-| |-gcc-libs
-| |-glibc
+| |-fftw
 | |-libsamplerate
-| | `-glibc
-| |-libsamplerate provides libsamplerate.so=0-64
-| |-libsndfile
-| `-libsndfile provides libsndfile.so=1-64
+| `-libsndfile
 |-libsoxr
-| `-gcc-libs
 |-libssh
-| |-glibc
 | |-openssl
 | `-zlib
 |-libtheora
 | `-libogg
-|-libva provides libva.so=2-64
+|-libva
 | |-libdrm
 | |-libx11
 | |-libxext
 | |-libxfixes
-|-libva provides libva-drm.so=2-64
-|-vid.stab provides libvidstab.so=1.2-64
-|-libvorbis provides libvorbisenc.so=2-64
-|-libvorbis provides libvorbis.so=0-64
-|-libvpx provides libvpx.so=9-64
+|-libva
+|-vid.stab
+|-libvorbis
+|-libvpx
 |-libwebp
-| |-giflib
-| |-libjpeg-turbo provides libjpeg
-| |-libpng
-| `-libtiff
 |-libx11
-|-x264 provides libx264.so=164-64
-| `-l-smash provides liblsmash.so=2-64
-|   `-glibc
-|-x265 provides libx265.so=199-64
-| `-gcc-libs
+|-x264
+| `-l-smash
+|-x265
 |-libxcb
 |-libxext
 |-libxml2
 |-libxv
 | `-libxext
-|-xvidcore provides libxvidcore.so=4-64
-| `-glibc
-|-zimg provides libzimg.so=2-64
-| |-gcc-libs
-| `-glibc
-|-ocl-icd
-| `-glibc
-|-libvpl provides onevpl
+|-xvidcore
+|-zimg
+|-libvpl
 | |-libdrm
 | |-libva
-| |-libx11
+| `-libx11
 |-opencore-amr
 |-openjpeg2
 | |-libpng
@@ -304,11 +219,10 @@ ffmpeg
 | `-lcms2
 |-opus
 |-sdl2
-| |-glibc
 | |-libxext
 | |-libxrender
 | |-libx11
-| |-libglvnd provides libgl
+| |-libglvnd
 | |-libxcursor
 | | |-libxfixes
 | | |-libxrender
@@ -317,12 +231,6 @@ ffmpeg
 | `-libusb
 |-snappy
 |-speex
-| |-gcc-libs
-| |-libogg
-| |-speexdsp
-| | `-gcc-libs
-| |-libogg provides libogg.so=0-64
-| `-speexdsp provides libspeexdsp.so=1-64
 |-srt
 | `-openssl
 |-svt-av1
