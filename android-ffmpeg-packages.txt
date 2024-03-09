@@ -3,31 +3,13 @@ ffmpeg
 |-bzip2
 |-cairo
 | |-fontconfig
-| | |-expat
-| | `-freetype2
-| |   |-brotli
-| |   |-bzip2
-| |   |-libpng
-| |   | `-zlib
-| |   |-zlib
-| |   `-harfbuzz
 | |-freetype2
 | |-glib2
 | |-libpng
 | |-libx11
-| | |-libxcb
-| | | |-xcb-proto
-| | | |-libxdmcp
-| | | | `-xorgproto
-| | | |-libxau
-| | | | `-xorgproto
-| | `-xorgproto
 | |-libxcb
 | |-libxext
-| | |-libx11
-| | `-xorgproto
 | |-libxrender
-| | `-libx11
 | |-lzo
 | |-pixman
 | `-zlib
@@ -144,7 +126,7 @@ ffmpeg
 |   `-libxft
 |     |-fontconfig
 |     `-libxrender
-|-rubberband provides librubberband.so=2-64
+|-rubberband
 | |-fftw
 | | `-openmpi
 | |   |-hwloc
@@ -160,7 +142,7 @@ ffmpeg
 | |   | |-libevent
 | |   | |-libevent
 | |   | `-zlib
-| |   |-openpmix provides libpmix.so=2-64
+| |   |-openpmix
 | |   |-openssh
 | |   | |-glibc
 | |   | |-krb5
@@ -169,7 +151,7 @@ ffmpeg
 | |   | | `-dnssec-anchors
 | |   | |-libedit
 | |   | |-libxcrypt
-| |   | |-libxcrypt provides libcrypt.so=2-64
+| |   | |-libxcrypt
 | |   | |-openssl
 | |   | |-pam
 | |   | `-zlib
