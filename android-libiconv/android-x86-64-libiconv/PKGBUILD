@@ -4,28 +4,28 @@ _android_arch=x86-64
 
 pkgname=android-${_android_arch}-libiconv
 pkgver=1.17
-pkgrel=1
-pkgdesc="Provides GNU libiconv.so and libcharset.so (android)"
+pkgrel=2
 arch=('any')
+pkgdesc="Provides GNU libiconv.so and libcharset.so (Android, ${_android_arch})"
 url="http://www.gnu.org/software/libiconv/"
 license=("LGPL")
 depends=('android-ndk')
-options=(!strip !buildflags staticlibs !emptydirs)
 makedepends=('android-configure')
+options=(!strip !buildflags staticlibs !emptydirs)
 source=("http://ftp.gnu.org/pub/gnu/libiconv/libiconv-$pkgver.tar.gz")
 md5sums=('d718cd5a59438be666d1575855be72c3')
 
 build() {
-    cd "${srcdir}"/libiconv-${pkgver}
+    cd "${srcdir}/libiconv-${pkgver}"
     source android-env ${_android_arch}
 
     android-${_android_arch}-configure \
-      --disable-nls
+        --disable-nls
     make $MAKEFLAGS
 }
 
 package() {
-    cd "${srcdir}"/libiconv-${pkgver}
+    cd "${srcdir}/libiconv-${pkgver}"
     source android-env ${_android_arch}
 
     make DESTDIR="$pkgdir" install

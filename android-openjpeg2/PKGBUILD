@@ -5,7 +5,7 @@
 _android_arch=
 
 pkgname=android-${_android_arch}-openjpeg2
-pkgver=2.5.0
+pkgver=2.5.2
 pkgrel=1
 arch=('any')
 pkgdesc="An open source JPEG 2000 codec, version ${pkgver} (android)"
@@ -17,7 +17,7 @@ depends=('android-ndk'
 options=(!strip !buildflags staticlibs !emptydirs)
 makedepends=('android-cmake')
 source=("https://github.com/uclouvain/openjpeg/archive/v${pkgver}.tar.gz")
-md5sums=('5cbb822a1203dd75b85639da4f4ecaab')
+md5sums=('f9ee64845881a15109ed0aa73a12202f')
 
 build() {
     cd "${srcdir}"/openjpeg-${pkgver}

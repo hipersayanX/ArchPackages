@@ -28,12 +28,7 @@ ffmpeg
 | | |-libffi
 | | `-libtasn1
 | |-libidn2
-| | `-libunistring
 | |-zstd
-| | |-zlib
-| | |-xz
-| | `-lz4
-| |-libidn2
 | |-libunistring
 | `-brotli
 |-gsm
@@ -93,7 +88,6 @@ ffmpeg
 | |   |-zlib
 | |   |-xz
 | |   `-zstd
-| |-lcms2
 | |-shaderc
 | | |-glslang
 | | `-spirv-tools
@@ -130,27 +124,20 @@ ffmpeg
 | |-fftw
 | | `-openmpi
 | |   |-hwloc
-| |   | |-glibc
 | |   | |-libtool
 | |   | | `-tar
-| |   | |   `-acl
 | |   | `-libpciaccess
 | |   |-libevent
 | |   |-libnl
 | |   |-openpmix
 | |   | |-hwloc
 | |   | |-libevent
-| |   | |-libevent
 | |   | `-zlib
-| |   |-openpmix
 | |   |-openssh
-| |   | |-glibc
-| |   | |-krb5
 | |   | |-ldns
 | |   | | |-openssl
 | |   | | `-dnssec-anchors
 | |   | |-libedit
-| |   | |-libxcrypt
 | |   | |-libxcrypt
 | |   | |-openssl
 | |   | |-pam

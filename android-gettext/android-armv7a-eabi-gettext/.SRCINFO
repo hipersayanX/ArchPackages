@@ -1,11 +1,10 @@
 pkgbase = android-armv7a-eabi-gettext
-	pkgdesc = GNU internationalization library (android)
+	pkgdesc = GNU internationalization library (Android, armv7a-eabi)
 	pkgver = 0.22.4
-	pkgrel = 1
+	pkgrel = 2
 	url = http://www.gnu.org/software/gettext/
 	arch = any
 	license = GPL
-	makedepends = gettext
 	makedepends = android-configure
 	depends = android-armv7a-eabi-termcap
 	depends = android-armv7a-eabi-libunistring

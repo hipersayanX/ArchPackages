@@ -12,7 +12,7 @@ all: prepare
 	lines=$$(grep -n 'build() {' $$PWD/PKGBUILD | awk -F: '{print $$1}'); \
 	lines=$$(echo "$$lines - 1" | bc); \
 	pkgBuildLines=$$(head -n $$lines $$PWD/PKGBUILD); \
-	pkgnameLine="$$pkgBuildLines;echo \$${pkgname[0]}"; \
+	pkgnameLine="$$pkgBuildLines;"$$'\n'"echo \$${pkgname[0]}"; \
 	pkgname=$$(echo "$$pkgnameLine" | sh); \
 	pkgname=$${pkgname//android--/}; \
 	for arch in $(ARCHS); do \
@@ -28,7 +28,7 @@ clean:
 	lines=$$(grep -n 'build() {' $$PWD/PKGBUILD | awk -F: '{print $$1}'); \
 	lines=$$(echo "$$lines - 1" | bc); \
 	pkgBuildLines=$$(head -n $$lines $$PWD/PKGBUILD); \
-	pkgnameLine="$$pkgBuildLines;echo \$${pkgname[0]}"; \
+	pkgnameLine="$$pkgBuildLines;"$$'\n'"echo \$${pkgname[0]}"; \
 	pkgname=$$(echo "$$pkgnameLine" | sh); \
 	pkgname=$${pkgname//android--/}; \
 	for arch in $(ARCHS) ; do \
@@ -37,12 +37,14 @@ clean:
 			$(RMDIR) src; \
 			$(RMDIR) $$pkgname; \
 			$(REMOVE) *.sig; \
+			$(REMOVE) *.sign; \
 			$(REMOVE) *.asc; \
 			$(REMOVE) *.tgz; \
 			$(REMOVE) *.bz2; \
 			$(REMOVE) *.gz; \
 			$(REMOVE) *.xz; \
 			$(REMOVE) *.zst; \
+			$(REMOVE) *.zip; \
 		popd; \
 	done
 
@@ -50,7 +52,7 @@ publish:
 	lines=$$(grep -n 'build() {' $$PWD/PKGBUILD | awk -F: '{print $$1}'); \
 	lines=$$(echo "$$lines - 1" | bc); \
 	pkgBuildLines=$$(head -n $$lines $$PWD/PKGBUILD); \
-	pkgnameLine="$$pkgBuildLines;echo \$${pkgname[0]}"; \
+	pkgnameLine="$$pkgBuildLines;"$$'\n'"echo \$${pkgname[0]}"; \
 	pkgname=$$(echo "$$pkgnameLine" | sh); \
 	pkgname=$${pkgname//android--/}; \
 	for arch in $(ARCHS); do \
@@ -65,12 +67,12 @@ prepare: PKGBUILD
 	lines=$$(grep -n 'build() {' $$PWD/PKGBUILD | awk -F: '{print $$1}'); \
 	lines=$$(echo "$$lines - 1" | bc); \
 	pkgBuildLines=$$(head -n $$lines $$PWD/PKGBUILD); \
-	pkgnameLine="$$pkgBuildLines;echo \$${pkgname[0]}"; \
+	pkgnameLine="$$pkgBuildLines;"$$'\n'"echo \$${pkgname[0]}"; \
 	pkgname=$$(echo "$$pkgnameLine" | sh); \
 	pkgname=$${pkgname//android--/}; \
-	srcUrlLine="$$pkgBuildLines;echo \$${source[0]}"; \
+	srcUrlLine="$$pkgBuildLines;"$$'\n'"echo \$${source[0]}"; \
 	srcUrl=$$(echo "$$srcUrlLine" | sh); \
-	pkgFilesLine="$$pkgBuildLines;echo \$${source[*]}"; \
+	pkgFilesLine="$$pkgBuildLines;"$$'\n'"echo \$${source[*]}"; \
 	pkgFiles=$$(echo "$$pkgFilesLine" | sh); \
 	fileName=$$(basename "$$srcUrl"); \
 	if [ ! -f "$$fileName" ] && [[ ! "$$srcUrl" =~ ^git\+.* ]]; then \
@@ -102,7 +104,7 @@ do:
 	lines=$$(grep -n 'build() {' $$PWD/PKGBUILD | awk -F: '{print $$1}'); \
 	lines=$$(echo "$$lines - 1" | bc); \
 	pkgBuildLines=$$(head -n $$lines $$PWD/PKGBUILD); \
-	pkgnameLine="$$pkgBuildLines;echo \$${pkgname[0]}"; \
+	pkgnameLine="$$pkgBuildLines;"$$'\n'"echo \$${pkgname[0]}"; \
 	pkgname=$$(echo "$$pkgnameLine" | sh); \
 	pkgname=$${pkgname//android--/}; \
 	for arch in $(ARCHS); do \
@@ -116,7 +118,7 @@ install:
 	lines=$$(grep -n 'build() {' $$PWD/PKGBUILD | awk -F: '{print $$1}'); \
 	lines=$$(echo "$$lines - 1" | bc); \
 	pkgBuildLines=$$(head -n $$lines $$PWD/PKGBUILD); \
-	pkgnameLine="$$pkgBuildLines;echo \$${pkgname[0]}"; \
+	pkgnameLine="$$pkgBuildLines;"$$'\n'"echo \$${pkgname[0]}"; \
 	pkgname=$$(echo "$$pkgnameLine" | sh); \
 	pkgname=$${pkgname//android--/}; \
 	for arch in $(ARCHS); do \
@@ -127,7 +129,7 @@ repo:
 	lines=$$(grep -n 'build() {' $$PWD/PKGBUILD | awk -F: '{print $$1}'); \
 	lines=$$(echo "$$lines - 1" | bc); \
 	pkgBuildLines=$$(head -n $$lines $$PWD/PKGBUILD); \
-	pkgnameLine="$$pkgBuildLines;echo \$${pkgname[0]}"; \
+	pkgnameLine="$$pkgBuildLines;"$$'\n'"echo \$${pkgname[0]}"; \
 	pkgname=$$(echo "$$pkgnameLine" | sh); \
 	pkgname=$${pkgname//android--/}; \
 	for arch in $(ARCHS); do \
@@ -138,7 +140,7 @@ gitinit:
 	lines=$$(grep -n 'build() {' $$PWD/PKGBUILD | awk -F: '{print $$1}'); \
 	lines=$$(echo "$$lines - 1" | bc); \
 	pkgBuildLines=$$(head -n $$lines $$PWD/PKGBUILD); \
-	pkgnameLine="$$pkgBuildLines;echo \$${pkgname[0]}"; \
+	pkgnameLine="$$pkgBuildLines;"$$'\n'"echo \$${pkgname[0]}"; \
 	pkgname=$$(echo "$$pkgnameLine" | sh); \
 	pkgname=$${pkgname//android--/}; \
 	for arch in $(ARCHS); do \

@@ -1,7 +1,7 @@
 pkgbase = android-x86-64-libiconv
-	pkgdesc = Provides GNU libiconv.so and libcharset.so (android)
+	pkgdesc = Provides GNU libiconv.so and libcharset.so (Android, x86-64)
 	pkgver = 1.17
-	pkgrel = 1
+	pkgrel = 2
 	url = http://www.gnu.org/software/libiconv/
 	arch = any
 	license = LGPL
