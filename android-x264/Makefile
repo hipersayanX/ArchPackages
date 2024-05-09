@@ -7,6 +7,10 @@ LINK = ln -fvs
 DOWNLOAD = wget -c
 MAKEPKG = MAKEFLAGS=-j4 makepkg -sf
 MAKEPKGDO = makepkg -do
+LOCALREPONAME = local
+LOCALREPOARCH = any
+LOCALREPODIR = ${HOME}/.arch-repo/$(LOCALREPONAME)/$(LOCALREPOARCH)
+LOCALDB = $(LOCALREPODIR)/$(LOCALREPONAME).db.tar.gz
 
 all: prepare
 	lines=$$(grep -n 'build() {' $$PWD/PKGBUILD | awk -F: '{print $$1}'); \
@@ -15,11 +19,15 @@ all: prepare
 	pkgnameLine="$$pkgBuildLines;"$$'\n'"echo \$${pkgname[0]}"; \
 	pkgname=$$(echo "$$pkgnameLine" | sh); \
 	pkgname=$${pkgname//android--/}; \
+	set -e; \
 	for arch in $(ARCHS); do \
 		pkgfolder=android-$$arch-$$pkgname; \
-		cd $$pkgfolder; \
+		pushd $$pkgfolder; \
 		$(MAKEPKG); \
-		cd ..; \
+		mkdir -p "$(LOCALREPODIR)"; \
+		cp -vf android-$$arch-*.pkg.tar.zst "$(LOCALREPODIR)/"; \
+		repo-add -Rnp "$(LOCALDB)" android-$$arch-*.pkg.tar.zst; \
+		popd; \
 	done
 
 .PHONY: clean
@@ -45,6 +53,7 @@ clean:
 			$(REMOVE) *.xz; \
 			$(REMOVE) *.zst; \
 			$(REMOVE) *.zip; \
+			$(REMOVE) *.lzma; \
 		popd; \
 	done
 
@@ -84,6 +93,7 @@ prepare: PKGBUILD
 	fi; \
 	for arch in $(ARCHS); do \
 		pkgfolder=android-$$arch-$$pkgname; \
+		$(REMOVE) $$pkgfolder/*.patch; \
 		$(MKDIR) $$pkgfolder; \
 		for f in $$pkgFiles; do \
 			if [ -e $$f ]; then \
@@ -94,6 +104,7 @@ prepare: PKGBUILD
 		$(COPY) android-$$pkgname.install $$pkgfolder/android-$$arch-$$pkgname.install; \
 		$(COPY) PKGBUILD $$pkgfolder; \
 		sed -i "s/_android_arch=/_android_arch=$$arch/g" $$pkgfolder/PKGBUILD; \
+		sed -i "s/package_android-$$pkgname/package_android-$$arch""-$$pkgname/g" $$pkgfolder/PKGBUILD; \
 		if [[ ! "$$srcUrl" =~ ^git\+.* ]]; then \
 			$(LINK) ../$$fileName $$pkgfolder/$$fileName; \
 			sed -i "s/$$checksum""s=('SKIP'/$$checksum""s=('$$sum'/g" $$pkgfolder/PKGBUILD; \
@@ -107,12 +118,13 @@ do:
 	pkgnameLine="$$pkgBuildLines;"$$'\n'"echo \$${pkgname[0]}"; \
 	pkgname=$$(echo "$$pkgnameLine" | sh); \
 	pkgname=$${pkgname//android--/}; \
+	set -e; \
 	for arch in $(ARCHS); do \
 		pkgfolder=android-$$arch-$$pkgname; \
-		cd $$pkgfolder; \
+		pushd $$pkgfolder; \
 		$(MAKEPKGDO); \
-		cd ..; \
-	done
+		popd; \
+	done;
 
 install:
 	lines=$$(grep -n 'build() {' $$PWD/PKGBUILD | awk -F: '{print $$1}'); \
@@ -121,6 +133,7 @@ install:
 	pkgnameLine="$$pkgBuildLines;"$$'\n'"echo \$${pkgname[0]}"; \
 	pkgname=$$(echo "$$pkgnameLine" | sh); \
 	pkgname=$${pkgname//android--/}; \
+	set -e; \
 	for arch in $(ARCHS); do \
 		pacman -U android-$$arch-$$pkgname/android-$$arch-*.pkg.tar.zst --noconfirm; \
 	done
@@ -132,8 +145,27 @@ repo:
 	pkgnameLine="$$pkgBuildLines;"$$'\n'"echo \$${pkgname[0]}"; \
 	pkgname=$$(echo "$$pkgnameLine" | sh); \
 	pkgname=$${pkgname//android--/}; \
+	set -e; \
 	for arch in $(ARCHS); do \
 		git clone ssh://aur@aur.archlinux.org/android-$$arch-$$pkgname.git; \
+	done
+
+localrepo:
+	mkdir -p "$(LOCALREPODIR)"; \
+	repo-add "$(LOCALDB)"
+
+localrepoadd:
+	mkdir -p "$(LOCALREPODIR)"; \
+	lines=$$(grep -n 'build() {' $$PWD/PKGBUILD | awk -F: '{print $$1}'); \
+	lines=$$(echo "$$lines - 1" | bc); \
+	pkgBuildLines=$$(head -n $$lines $$PWD/PKGBUILD); \
+	pkgnameLine="$$pkgBuildLines;"$$'\n'"echo \$${pkgname[0]}"; \
+	pkgname=$$(echo "$$pkgnameLine" | sh); \
+	pkgname=$${pkgname//android--/}; \
+	set -e; \
+	for arch in $(ARCHS); do \
+		cp -vf android-$$arch-*.pkg.tar.zst "$(LOCALREPODIR)/"; \
+		repo-add -Rnp "$(LOCALDB)" android-$$arch-$$pkgname/android-$$arch-*.pkg.tar.zst; \
 	done
 
 gitinit:
@@ -143,6 +175,7 @@ gitinit:
 	pkgnameLine="$$pkgBuildLines;"$$'\n'"echo \$${pkgname[0]}"; \
 	pkgname=$$(echo "$$pkgnameLine" | sh); \
 	pkgname=$${pkgname//android--/}; \
+	set -e; \
 	for arch in $(ARCHS); do \
 		mkdir -p "android-$$arch-$$pkgname"; \
 		cd "android-$$arch-$$pkgname"; \
