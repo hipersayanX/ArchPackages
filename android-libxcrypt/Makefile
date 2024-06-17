@@ -9,7 +9,8 @@ MAKEPKG = MAKEFLAGS=-j4 makepkg -sf
 MAKEPKGDO = makepkg -do
 LOCALREPONAME = local
 LOCALREPOARCH = any
-LOCALREPODIR = ${HOME}/.arch-repo/$(LOCALREPONAME)/$(LOCALREPOARCH)
+LOCALREPO = ${HOME}/.arch-repo
+LOCALREPODIR = $(LOCALREPO)/$(LOCALREPONAME)/$(LOCALREPOARCH)
 LOCALDB = $(LOCALREPODIR)/$(LOCALREPONAME).db.tar.gz
 
 all: prepare
@@ -164,7 +165,7 @@ localrepoadd:
 	pkgname=$${pkgname//android--/}; \
 	set -e; \
 	for arch in $(ARCHS); do \
-		cp -vf android-$$arch-*.pkg.tar.zst "$(LOCALREPODIR)/"; \
+		cp -vf android-$$arch-$$pkgname/android-$$arch-*.pkg.tar.zst "$(LOCALREPODIR)/"; \
 		repo-add -Rnp "$(LOCALDB)" android-$$arch-$$pkgname/android-$$arch-*.pkg.tar.zst; \
 	done
 
@@ -184,3 +185,10 @@ gitinit:
 		git branch --set-upstream-to=upstream/master master; \
 		cd ..; \
 	done
+
+package:
+	if [ -z "${FILE_PASSWORD}" ] ; then \
+		7z a "arch-repo-$(LOCALREPONAME).7z" "${LOCALREPO}"/* ; \
+	else \
+		7z a -p"${FILE_PASSWORD}" "arch-repo-$(LOCALREPONAME).7z" "${LOCALREPO}"/* ; \
+	fi; \
