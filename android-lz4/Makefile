@@ -7,11 +7,12 @@ LINK = ln -fvs
 DOWNLOAD = wget -c
 MAKEPKG = MAKEFLAGS=-j4 makepkg -sf
 MAKEPKGDO = makepkg -do
-LOCALREPONAME = local
+LOCALREPONAME = local-packages
 LOCALREPOARCH = any
 LOCALREPO = ${HOME}/.arch-repo
-LOCALREPODIR = $(LOCALREPO)/$(LOCALREPONAME)/$(LOCALREPOARCH)
+LOCALREPODIR = $(LOCALREPO)/$(LOCALREPONAME)/os/$(LOCALREPOARCH)
 LOCALDB = $(LOCALREPODIR)/$(LOCALREPONAME).db.tar.gz
+FILE_PASSWORD =
 
 all: prepare
 	lines=$$(grep -n 'build() {' $$PWD/PKGBUILD | awk -F: '{print $$1}'); \
@@ -187,8 +188,8 @@ gitinit:
 	done
 
 package:
-	if [ -z "${FILE_PASSWORD}" ] ; then \
+	if [ -z "$(FILE_PASSWORD)" ] ; then \
 		7z a "arch-repo-$(LOCALREPONAME).7z" "${LOCALREPO}"/* ; \
 	else \
-		7z a -p"${FILE_PASSWORD}" "arch-repo-$(LOCALREPONAME).7z" "${LOCALREPO}"/* ; \
-	fi; \
+		7z a -p"$(FILE_PASSWORD)" "arch-repo-$(LOCALREPONAME).7z" "${LOCALREPO}"/* ; \
+	fi
