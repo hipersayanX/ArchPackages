@@ -179,6 +179,7 @@ packages=('android-abseil-cpp'
           'android-rubberband'
           'android-sdl2'
           'android-serd'
+          'android-snappy'
           'android-sord'
           'android-speex'
           'android-speexdsp'
@@ -195,6 +196,7 @@ packages=('android-abseil-cpp'
           'android-vid.stab'
           'android-vmaf'
           'android-webp-pixbuf-loader'
+          'android-webrtc-audio-processing-1'
           'android-x264'
           'android-x264-bootstrap'
           'android-x265'
@@ -209,8 +211,7 @@ packages=('android-abseil-cpp'
           'android-zimg'
           'android-zix'
           'android-zlib'
-          'android-zstd'
-          'android-webrtc-audio-processing-1')
+          'android-zstd')
 
 for package in "${packages[@]}"; do
     cp -vf "${PWD}/Makefile" "${PWD}/${package}/"
