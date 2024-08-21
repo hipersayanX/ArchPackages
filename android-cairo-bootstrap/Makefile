@@ -149,7 +149,6 @@ repo:
 	pkgnameLine="$$pkgBuildLines;"$$'\n'"echo \$${pkgname[0]}"; \
 	pkgname=$$(echo "$$pkgnameLine" | sh); \
 	pkgname=$${pkgname//android--/}; \
-	set -e; \
 	for arch in $(ARCHS); do \
 		git clone ssh://aur@aur.archlinux.org/android-$$arch-$$pkgname.git; \
 	done

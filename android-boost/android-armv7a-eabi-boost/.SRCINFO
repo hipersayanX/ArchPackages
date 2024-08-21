@@ -1,0 +1,23 @@
+pkgbase = android-armv7a-eabi-boost
+	pkgdesc = Free peer-reviewed portable C++ source libraries (Android armv7a-eabi)
+	pkgver = 1.85.0
+	pkgrel = 1
+	url = https://www.boost.org/
+	arch = any
+	groups = android-boost
+	license = custom
+	makedepends = android-cmake
+	makedepends = android-armv7a-eabi-openmpi
+	depends = android-armv7a-eabi-bzip2
+	depends = android-armv7a-eabi-icu
+	depends = android-armv7a-eabi-zlib
+	depends = android-armv7a-eabi-zstd
+	optdepends = android-armv7a-eabi-openmpi: for mpi support
+	options = !strip
+	options = !buildflags
+	options = staticlibs
+	options = !emptydirs
+	source = https://github.com/boostorg/boost/releases/download/boost-1.85.0/boost-1.85.0-cmake.tar.xz
+	md5sums = badea970931766604d4d5f8f4090b176
+
+pkgname = android-armv7a-eabi-boost
