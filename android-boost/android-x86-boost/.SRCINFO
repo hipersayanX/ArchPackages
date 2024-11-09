@@ -1,0 +1,23 @@
+pkgbase = android-x86-boost
+	pkgdesc = Free peer-reviewed portable C++ source libraries (Android x86)
+	pkgver = 1.85.0
+	pkgrel = 1
+	url = https://www.boost.org/
+	arch = any
+	groups = android-boost
+	license = custom
+	makedepends = android-cmake
+	makedepends = android-x86-openmpi
+	depends = android-x86-bzip2
+	depends = android-x86-icu
+	depends = android-x86-zlib
+	depends = android-x86-zstd
+	optdepends = android-x86-openmpi: for mpi support
+	options = !strip
+	options = !buildflags
+	options = staticlibs
+	options = !emptydirs
+	source = https://github.com/boostorg/boost/releases/download/boost-1.85.0/boost-1.85.0-cmake.tar.xz
+	md5sums = badea970931766604d4d5f8f4090b176
+
+pkgname = android-x86-boost
