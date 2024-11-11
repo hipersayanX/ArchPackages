@@ -7,10 +7,14 @@ LINK = ln -fvs
 DOWNLOAD = wget -c
 MAKEPKG = MAKEFLAGS=-j4 makepkg -sf
 MAKEPKGDO = makepkg -do
-LOCALREPONAME = local
+LOCALREPONAME = local-packages
 LOCALREPOARCH = any
-LOCALREPODIR = ${HOME}/.arch-repo/$(LOCALREPONAME)/$(LOCALREPOARCH)
+LOCALREPO = ${HOME}/.arch-repo
+LOCALREPODIR = $(LOCALREPO)/$(LOCALREPONAME)/os/$(LOCALREPOARCH)
 LOCALDB = $(LOCALREPODIR)/$(LOCALREPONAME).db.tar.gz
+FILE_PASSWORD =
+BASE_PACKAGES = android-cmake android-configure android-environment android-meson android-pkg-config
+AUR_BASE_PACKAGES = android-ndk android-platform-21 android-platform-24 android-platform android-sdk android-sdk-build-tools android-sdk-platform-tools
 
 all: prepare
 	lines=$$(grep -n 'build() {' $$PWD/PKGBUILD | awk -F: '{print $$1}'); \
@@ -145,7 +149,6 @@ repo:
 	pkgnameLine="$$pkgBuildLines;"$$'\n'"echo \$${pkgname[0]}"; \
 	pkgname=$$(echo "$$pkgnameLine" | sh); \
 	pkgname=$${pkgname//android--/}; \
-	set -e; \
 	for arch in $(ARCHS); do \
 		git clone ssh://aur@aur.archlinux.org/android-$$arch-$$pkgname.git; \
 	done
@@ -164,7 +167,7 @@ localrepoadd:
 	pkgname=$${pkgname//android--/}; \
 	set -e; \
 	for arch in $(ARCHS); do \
-		cp -vf android-$$arch-*.pkg.tar.zst "$(LOCALREPODIR)/"; \
+		cp -vf android-$$arch-$$pkgname/android-$$arch-*.pkg.tar.zst "$(LOCALREPODIR)/"; \
 		repo-add -Rnp "$(LOCALDB)" android-$$arch-$$pkgname/android-$$arch-*.pkg.tar.zst; \
 	done
 
@@ -184,3 +187,32 @@ gitinit:
 		git branch --set-upstream-to=upstream/master master; \
 		cd ..; \
 	done
+
+basepackages:
+	set -e; \
+	for package in $(BASE_PACKAGES); do \
+		pushd $$package; \
+		$(MAKEPKG); \
+		mkdir -p "$(LOCALREPODIR)"; \
+		cp -vf $$package-*.pkg.tar.zst "$(LOCALREPODIR)/"; \
+		repo-add -Rnp "$(LOCALDB)" $$package-*.pkg.tar.zst; \
+		rm -rvf pkg src $$package-*.pkg.tar.zst; \
+		popd; \
+	done; \
+	for package in $(AUR_BASE_PACKAGES); do \
+		git clone https://aur.archlinux.org/$$package.git /tmp/$$package; \
+		pushd /tmp/$$package; \
+		$(MAKEPKG); \
+		mkdir -p "$(LOCALREPODIR)"; \
+		cp -vf $$package-*.pkg.tar.zst "$(LOCALREPODIR)/"; \
+		repo-add -Rnp "$(LOCALDB)" $$package-*.pkg.tar.zst; \
+		popd; \
+		rm -rvf /tmp/$$package; \
+	done; \
+
+package:
+	if [ -z "$(FILE_PASSWORD)" ] ; then \
+		7z a "arch-repo-$(LOCALREPONAME).7z" "${LOCALREPO}"/* ; \
+	else \
+		7z a -p"$(FILE_PASSWORD)" "arch-repo-$(LOCALREPONAME).7z" "${LOCALREPO}"/* ; \
+	fi
