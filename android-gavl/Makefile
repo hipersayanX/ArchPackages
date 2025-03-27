@@ -1,4 +1,4 @@
-ARCHS = aarch64 armv7a-eabi x86 x86-64
+ARCHS = aarch64 armv7a-eabi riscv64 x86 x86-64
 MKDIR = mkdir -pv
 COPY = cp -vf
 REMOVE = rm -vf
@@ -11,7 +11,7 @@ LOCALREPONAME = local-packages
 LOCALREPOARCH = any
 LOCALREPO = ${HOME}/.arch-repo
 LOCALREPODIR = $(LOCALREPO)/$(LOCALREPONAME)/os/$(LOCALREPOARCH)
-LOCALDB = $(LOCALREPODIR)/$(LOCALREPONAME).db.tar.gz
+LOCALDB = $(LOCALREPODIR)/$(LOCALREPONAME).db.tar.zst
 FILE_PASSWORD =
 BASE_PACKAGES = android-cmake android-configure android-environment android-meson android-pkg-config
 AUR_BASE_PACKAGES = android-ndk android-platform-21 android-platform-24 android-platform android-sdk android-sdk-build-tools android-sdk-platform-tools

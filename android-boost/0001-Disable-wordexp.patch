@@ -4,15 +4,27 @@
  #if defined(BOOST_PROCESS_V2_WINDOWS)
  #include <windows.h>
  #include <shellapi.h>
--#else
+-#elif !defined(__OpenBSD__)
 -#include <wordexp.h>
  #endif
  
  BOOST_PROCESS_V2_BEGIN_NAMESPACE
-@@ -42,21 +40,7 @@
-     }
-     std::string message(int value) const
-     {
+@@ -30,42 +28,6 @@
+ {
+     return system_category();
+ }
+-#elif !defined(__OpenBSD__)
+-
+-struct shell_category_t final : public error_category
+-{
+-    shell_category_t() : error_category(0xDAF1u) {}
+-
+-    const char* name() const noexcept
+-    {
+-        return "process.v2.shell";
+-    }
+-    std::string message(int value) const
+-    {
 -        switch (value)
 -        {
 -        case WRDE_BADCHAR:
@@ -28,14 +40,26 @@
 -        default:
 -            return "process.v2.wordexp error";
 -        }
-+        return {"process.v2.wordexp error"};
-     }
- };
+-    }
+-};
+-
+-BOOST_PROCESS_V2_DECL const error_category& get_shell_category()
+-{
+-    static shell_category_t instance;
+-    return instance;
+-}
+-
+ #else
  
-@@ -96,26 +80,6 @@
+ const error_category& get_shell_category()
+@@ -99,49 +61,6 @@
+     return input_.c_str();
+ }
  
- void shell::parse_()
- {
+-#elif !defined(__OpenBSD__)
+-
+-void shell::parse_()
+-{
 -    wordexp_t we{};
 -    auto cd = wordexp(input_.c_str(), &we, WRDE_NOCMD);
 -
@@ -56,6 +80,25 @@
 -        };
 -        wordfree(&we);
 -    };
- }
+-}
+-
+-shell::~shell()
+-{
+-    if (argv_ != nullptr && free_argv_ != nullptr)
+-        free_argv_(argc_, argv_);
+-}
+-
+-auto shell::args() const -> args_type
+-{
+-    if (argc() == 0)
+-    {
+-        static const char * helper = nullptr;
+-        return &helper;
+-    }
+-    else
+-        return const_cast<const char**>(argv());
+-}
+-
+ #else
  
- shell::~shell()
+ void shell::parse_()

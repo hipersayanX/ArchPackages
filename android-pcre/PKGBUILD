@@ -5,11 +5,12 @@ _android_arch=
 
 pkgname=android-${_android_arch}-pcre
 pkgver=8.45
-pkgrel=2
+pkgrel=3
 pkgdesc="A library that implements Perl 5-style regular expressions (Android ${_android_arch})"
 arch=('any')
 url="http://www.pcre.org/"
 license=("BSD")
+groups=('android-pcre')
 depends=('android-ndk')
 options=(!strip !buildflags staticlibs !emptydirs)
 makedepends=('android-configure'
@@ -23,7 +24,7 @@ md5sums=('4452288e6a0eefb2ab11d36010a1eebb'
          'SKIP')
 
 build() {
-    cd "${srcdir}"/pcre-${pkgver}
+    cd "${srcdir}/pcre-${pkgver}"
     source android-env ${_android_arch}
 
     export LIBS="-L${ANDROID_PREFIX_LIB}"
@@ -39,10 +40,10 @@ build() {
 }
 
 package() {
-    cd "${srcdir}"/pcre-${pkgver}
+    cd "${srcdir}/pcre-${pkgver}"
     source android-env ${_android_arch}
 
-    make DESTDIR="$pkgdir" install
+    make DESTDIR="${pkgdir}" install
     rm -r "${pkgdir}/${ANDROID_PREFIX_BIN}"
     rm -r "${pkgdir}/${ANDROID_PREFIX_SHARE}"
     ${ANDROID_STRIP} -g --strip-unneeded "${pkgdir}/${ANDROID_PREFIX_LIB}"/*.so
