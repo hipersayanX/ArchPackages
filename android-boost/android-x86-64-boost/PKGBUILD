@@ -4,7 +4,7 @@
 _android_arch=x86-64
 
 pkgname=android-${_android_arch}-boost
-pkgver=1.87.0
+pkgver=1.89.0
 pkgrel=1
 arch=('any')
 pkgdesc="Free peer-reviewed portable C++ source libraries (Android ${_android_arch})"
@@ -12,6 +12,7 @@ url="https://www.boost.org/"
 license=('custom')
 groups=('android-boost')
 depends=("android-${_android_arch}-bzip2"
+         "android-${_android_arch}-libiconv"
          "android-${_android_arch}-icu"
          "android-${_android_arch}-zlib"
          "android-${_android_arch}-zstd")
@@ -19,16 +20,8 @@ makedepends=('android-cmake'
              "android-${_android_arch}-openmpi")
 optdepends=("android-${_android_arch}-openmpi: for mpi support")
 options=(!strip !buildflags staticlibs !emptydirs)
-source=("https://github.com/boostorg/boost/releases/download/boost-${pkgver}/boost-${pkgver}-cmake.tar.xz"
-        '0001-Disable-wordexp.patch')
-md5sums=('d55d43218e81ca3d0fc14436b7665bf1'
-         'd880b3d0c05ef6da0d44912cdb82ef1c')
-
-prepare() {
-    cd "${srcdir}/boost-${pkgver}"
-
-    patch -Np1 -i ../0001-Disable-wordexp.patch
-}
+source=("https://github.com/boostorg/boost/releases/download/boost-${pkgver}/boost-${pkgver}-cmake.tar.xz")
+md5sums=('537da0e22b31b8b7185cc44fdde70458')
 
 build() {
     cd "${srcdir}/boost-${pkgver}"

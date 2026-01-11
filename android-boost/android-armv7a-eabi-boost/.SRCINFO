@@ -1,6 +1,6 @@
 pkgbase = android-armv7a-eabi-boost
 	pkgdesc = Free peer-reviewed portable C++ source libraries (Android armv7a-eabi)
-	pkgver = 1.87.0
+	pkgver = 1.89.0
 	pkgrel = 1
 	url = https://www.boost.org/
 	arch = any
@@ -9,6 +9,7 @@ pkgbase = android-armv7a-eabi-boost
 	makedepends = android-cmake
 	makedepends = android-armv7a-eabi-openmpi
 	depends = android-armv7a-eabi-bzip2
+	depends = android-armv7a-eabi-libiconv
 	depends = android-armv7a-eabi-icu
 	depends = android-armv7a-eabi-zlib
 	depends = android-armv7a-eabi-zstd
@@ -17,9 +18,7 @@ pkgbase = android-armv7a-eabi-boost
 	options = !buildflags
 	options = staticlibs
 	options = !emptydirs
-	source = https://github.com/boostorg/boost/releases/download/boost-1.87.0/boost-1.87.0-cmake.tar.xz
-	source = 0001-Disable-wordexp.patch
-	md5sums = d55d43218e81ca3d0fc14436b7665bf1
-	md5sums = d880b3d0c05ef6da0d44912cdb82ef1c
+	source = https://github.com/boostorg/boost/releases/download/boost-1.89.0/boost-1.89.0-cmake.tar.xz
+	md5sums = 537da0e22b31b8b7185cc44fdde70458
 
 pkgname = android-armv7a-eabi-boost
