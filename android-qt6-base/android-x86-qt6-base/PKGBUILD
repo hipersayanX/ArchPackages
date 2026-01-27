@@ -24,8 +24,9 @@ depends=('java-runtime-headless-openjdk=17'
          "android-${_android_arch}-zlib"
          "android-${_android_arch}-sqlite"
          "android-${_android_arch}-pcre2"
-         "android-${_android_arch}-freetype2")
-depends+=("android-${_android_arch}-harfbuzz")
+         "android-${_android_arch}-freetype2"
+         "android-${_android_arch}-fontconfig"
+         "android-${_android_arch}-harfbuzz")
 makedepends=('android-cmake'
              'android-pkg-config'
              'java-environment-openjdk=17'

@@ -1,4 +1,4 @@
-ARCHS = aarch64 armv7a-eabi riscv64 x86 x86-64
+ARCHS = aarch64 armv7a-eabi x86 x86-64
 MKDIR = mkdir -pv
 COPY = cp -vf
 REMOVE = rm -vf

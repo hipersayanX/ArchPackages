@@ -14,7 +14,7 @@ LOCALREPODIR = $(LOCALREPO)/$(LOCALREPONAME)/os/$(LOCALREPOARCH)
 LOCALDB = $(LOCALREPODIR)/$(LOCALREPONAME).db.tar.zst
 FILE_PASSWORD =
 BASE_PACKAGES = android-cmake android-configure android-environment android-meson android-pkg-config
-AUR_BASE_PACKAGES = android-ndk android-platform-21 android-platform-24 android-platform android-sdk android-sdk-build-tools android-sdk-platform-tools
+AUR_BASE_PACKAGES = android-ndk android-platform-21 android-platform-24 android-platform-34 android-platform-35 android-platform android-sdk android-sdk-build-tools android-sdk-platform-tools
 
 all: prepare
 	lines=$$(grep -n 'build() {' $$PWD/PKGBUILD | awk -F: '{print $$1}'); \
@@ -151,6 +151,17 @@ repo:
 	pkgname=$${pkgname//android--/}; \
 	for arch in $(ARCHS); do \
 		git clone ssh://aur@aur.archlinux.org/android-$$arch-$$pkgname.git; \
+	done
+
+rawrepo:
+	lines=$$(grep -n 'build() {' $$PWD/PKGBUILD | awk -F: '{print $$1}'); \
+	lines=$$(echo "$$lines - 1" | bc); \
+	pkgBuildLines=$$(head -n $$lines $$PWD/PKGBUILD); \
+	pkgnameLine="$$pkgBuildLines;"$$'\n'"echo \$${pkgname[0]}"; \
+	pkgname=$$(echo "$$pkgnameLine" | sh); \
+	pkgname=$${pkgname//android--/}; \
+	for arch in $(ARCHS); do \
+		mkdir -p android-$$arch-$$pkgname; \
 	done
 
 localrepo:

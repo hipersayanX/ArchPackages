@@ -3,8 +3,8 @@
 _android_arch=
 
 pkgname=android-${_android_arch}-ffmpeg-minimal
-pkgver=7.1
-pkgrel=2
+pkgver=8.0.1
+pkgrel=1
 arch=('any')
 pkgdesc="Complete solution to record, convert and stream audio and video (Android ${_android_arch})"
 url="http://ffmpeg.org/"
@@ -20,14 +20,7 @@ depends=("android-${_android_arch}-aom"
          "android-${_android_arch}-libvorbis"
          "android-${_android_arch}-libvpx"
          "android-${_android_arch}-opus"
-         "android-${_android_arch}-svt-av1"
-         "android-${_android_arch}-x264"
-         "android-${_android_arch}-x265")
-
-if [ "${_android_arch}" != riscv64 ]; then
-    depends+=("android-${_android_arch}-rav1e")
-fi
-
+         "android-${_android_arch}-svt-av1")
 makedepends=('android-configure'
              'nasm')
 provides=(${pkgname%-minimal})
@@ -35,7 +28,7 @@ conflicts=(${pkgname%-minimal})
 options=(!strip !buildflags staticlibs !emptydirs)
 source=("http://ffmpeg.org/releases/ffmpeg-${pkgver}.tar.xz"
         'configure.patch')
-md5sums=('623aa63a72139a82ccb99cd6ee477b94'
+md5sums=('b4e86cef7b3333034977ae9df391896d'
          'c1851376794c16bcb37cfa8918e10cba')
 
 prepare() {
@@ -78,7 +71,7 @@ build() {
     extra_options=
 
     # Platform specific patches
-    case "$_android_arch" in
+    case "${_android_arch}" in
         riscv64)
              extra_options="${extra_options} --disable-asm"
             ;;
@@ -88,10 +81,6 @@ build() {
         *)
             ;;
     esac
-
-    if [ "${_android_arch}" != riscv64 ]; then
-        extra_options="${extra_options} --enable-encoder=librav1e --enable-librav1e"
-    fi
 
     ./configure \
         --prefix=${ANDROID_PREFIX} \
@@ -125,22 +114,21 @@ build() {
         --disable-outdev=v4l2 \
         --disable-alsa \
         --disable-avfilter \
-        --disable-filters \
-        --disable-bsfs \
         --disable-encoders \
         --enable-encoder=aac \
-        --enable-encoder=libaom_av1 \
         --enable-encoder=libmp3lame \
         --enable-encoder=libopus \
-        --enable-encoder=libsvtav1 \
         --enable-encoder=libvorbis \
         --enable-encoder=libvpx_vp8 \
         --enable-encoder=libvpx_vp9 \
-        --enable-encoder=libx264 \
-        --enable-encoder=libx264rgb \
-        --enable-encoder=libx265 \
         --enable-encoder=opus \
         --enable-encoder=vorbis \
+        --enable-encoder=av1_mediacodec \
+        --enable-encoder=h264_mediacodec \
+        --enable-encoder=hevc_mediacodec \
+        --enable-encoder=mpeg4_mediacodec \
+        --enable-encoder=vp8_mediacodec \
+        --enable-encoder=vp9_mediacodec \
         --disable-muxers \
         --enable-muxer=mp4 \
         --enable-muxer=webm \
@@ -165,6 +153,17 @@ build() {
         --enable-decoder=vorbis \
         --enable-decoder=vp8 \
         --enable-decoder=vp9 \
+        --enable-decoder=aac_mediacodec \
+        --enable-decoder=amrnb_mediacodec \
+        --enable-decoder=amrwb_mediacodec \
+        --enable-decoder=av1_mediacodec \
+        --enable-decoder=h264_mediacodec \
+        --enable-decoder=hevc_mediacodec \
+        --enable-decoder=mp3_mediacodec \
+        --enable-decoder=mpeg2_mediacodec \
+        --enable-decoder=mpeg4_mediacodec \
+        --enable-decoder=vp8_mediacodec \
+        --enable-decoder=vp9_mediacodec \
         --disable-parsers \
         --enable-parser=aac \
         --enable-parser=aac_latm \
@@ -175,7 +174,6 @@ build() {
         --enable-parser=vorbis \
         --enable-parser=vp8 \
         --enable-parser=vp9 \
-        --disable-postproc \
         --disable-hwaccels \
         --disable-devices \
         --disable-iconv \
@@ -201,8 +199,8 @@ build() {
         --enable-libsvtav1 \
         --enable-libvorbis \
         --enable-libvpx \
-        --enable-libx264 \
-        --enable-libx265 \
+        --enable-jni \
+        --enable-mediacodec \
         ${extra_options}
     make $MAKEFLAGS
 }
@@ -215,4 +213,6 @@ package() {
     rm -r "${pkgdir}/${ANDROID_PREFIX_SHARE}"
     ${ANDROID_STRIP} -g --strip-unneeded "${pkgdir}/${ANDROID_PREFIX_LIB}"/*.so
     ${ANDROID_STRIP} -g "${pkgdir}/${ANDROID_PREFIX_LIB}"/*.a || true
+
+    install -vDm 644 COPYING.GPLv3 -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }

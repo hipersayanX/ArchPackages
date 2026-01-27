@@ -1,7 +1,0 @@
-glib/
-pkg/
-src/
-*.log
-*.tar
-*.xz
-*.pkg.tar.zst
