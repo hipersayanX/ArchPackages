@@ -4,7 +4,7 @@
 _android_arch=armv7a-eabi
 
 pkgname=android-${_android_arch}-qt6-declarative
-_qtver=6.9.1
+_qtver=6.10.1
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=('any')
@@ -14,8 +14,10 @@ pkgdesc="Classes for QML and JavaScript languages (Android ${_android_arch})"
 depends=("android-${_android_arch}-qt6-base")
 makedepends=('android-cmake'
              "android-${_android_arch}-qt6-shadertools"
+             "android-${_android_arch}-qt6-svg"
              'qt6-declarative'
              'qt6-shadertools'
+             'qt6-svg'
              'ninja'
              'python')
 optdepends=('qt6-declarative: development tools')
@@ -28,8 +30,8 @@ groups=('android-qt6-declarative'
 _pkgfqn="qtdeclarative-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
         '0001-Exclude-qmltime-when-cross-compiling.patch')
-sha256sums=('ccb94665df0199d7ee387b965b29677c8b89cfb1782bb6f01239b1d1524cec97'
-            '717b403ed5d28097e3f4b80e7a29505ffd75023c073b3015b8cf37ce38861910')
+md5sums=('5a3cb44b944980795a3cf5c55d849cf1'
+         'b24ae7735a5da9fc612173049875d829')
 
 prepare () {
     cd "${srcdir}/${_pkgfqn}"
@@ -70,7 +72,7 @@ build() {
         -DFEATURE_quickcontrols2_macos=OFF \
         -DFEATURE_quickcontrols2_ios=OFF \
         -DFEATURE_quickcontrols2_windows=OFF
-    VERBOSE=1 cmake --build build-shared
+    cmake --build build-shared
 }
 
 package() {
@@ -79,9 +81,6 @@ package() {
 
     DESTDIR="${pkgdir}" cmake --install build-shared
 
-    install -d "${pkgdir}/usr/share/licenses"
-    ln -s "/usr/share/licenses/android-${_android_arch}-qt6-base" "${pkgdir}/usr/share/licenses/${pkgname}"
-
     # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
     find "${pkgdir}/${ANDROID_PREFIX}/" -type f -name '*.prl' \
         -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
@@ -89,4 +88,6 @@ package() {
     rm -rvf "${pkgdir}/${ANDROID_PREFIX}/share/doc" || true
     find ${pkgdir}/${ANDROID_PREFIX} -type f -name 'lib*.so' -exec ${ANDROID_STRIP} -g --strip-unneeded {} \;
     find ${pkgdir}/${ANDROID_PREFIX} -type f -name 'lib*.a' -exec ${ANDROID_STRIP} -g {} \;
+
+    install -Dm644 LICENSES/* -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
