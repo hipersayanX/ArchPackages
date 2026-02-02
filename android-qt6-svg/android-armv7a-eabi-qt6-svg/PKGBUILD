@@ -4,7 +4,7 @@
 _android_arch=armv7a-eabi
 
 pkgname=android-${_android_arch}-qt6-svg
-_qtver=6.9.1
+_qtver=6.10.2
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=('any')
@@ -20,7 +20,7 @@ groups=('android-qt6-svg'
         "android-${_android_arch}-qt6")
 _pkgfqn="qtsvg-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('2dfc5de5fd891ff2afd9861e519bf1a26e6deb729b3133f68a28ba763c9abbd5')
+md5sums=('db085b160c374687508ea043df42c889')
 
 build() {
     cd "${srcdir}/${_pkgfqn}"
@@ -44,7 +44,7 @@ build() {
         -DQT_BUILD_EXAMPLES=OFF \
         -DQT_BUILD_DOCS=OFF \
         -DFEATURE_pkg_config=ON
-    VERBOSE=1 cmake --build build-shared
+    cmake --build build-shared
 }
 
 package() {
