@@ -4,7 +4,7 @@
 _android_arch=aarch64
 
 pkgname=android-${_android_arch}-qt6-multimedia
-_qtver=6.9.1
+_qtver=6.10.2
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=('any')
@@ -24,20 +24,27 @@ groups=('android-qt6-multimedia'
         "android-${_android_arch}-qt6")
 _pkgfqn="qtmultimedia-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
-        '0001-Fix-compile-flags-of-resonance-audio-for-mingw-w64.patch'
-        '0002-Fix-casing-when-including-wininet.h.patch')
-sha256sums=('955e36459518ee55f8e2bb79defc6e44aa94dc1edf5ac58a22d7734b2e07391d'
-            'f974e0a54693cda47d07964c44130e66e8c4e6207e5e3be4fd3fb8b2d12a05fa'
-            '273c69ad51282eb63a2e427239ad771a55d4469cfb2272d853b3308c94a676f2')
+        '0001-Fix-compile-flags-of-resonance-audio-for-mingw-w64.patch')
+md5sums=('f5043971d7b5bef9dbada183ba411362'
+         '2159cc88c5829d2d1d1e2f28dd770c92')
 
 prepare () {
     cd "${srcdir}/${_pkgfqn}"
+    source android-env ${_android_arch}
 
     # apply patches; further descriptions can be found in patch files itself
     for patch in "${srcdir}/"*.patch; do
         msg2 "Applying patch ${patch}"
         patch -Np1 -i "${patch}" || true
     done
+
+    if [ "${ANDROID_MINIMUM_PLATFORM}" -lt 26 ]; then
+        sed -i 's|Multimedia CONDITION ANDROID|Multimedia CONDITION QT_FEATURE_aaudio|g' src/multimedia/CMakeLists.txt
+        sed -i 's|defined(Q_OS_ANDROID)|QT_CONFIG(aaudio)|g' src/multimedia/platform/qplatformaudiodevices.cpp
+    fi
+
+    sed -i 's|FF_PROFILE_H264_HIGH|100|g' src/plugins/multimedia/ffmpeg/recordingengine/qffmpegencoderoptions.cpp
+    sed -i 's|FF_PROFILE_HEVC_MAIN|1|g' src/plugins/multimedia/ffmpeg/recordingengine/qffmpegencoderoptions.cpp
 }
 
 build() {
@@ -45,6 +52,11 @@ build() {
     source android-env ${_android_arch}
 
     export PATH="/usr/lib/jvm/java-17-openjdk/bin:${PATH}"
+    extra_params=
+
+    if [ "${ANDROID_MINIMUM_PLATFORM}" -lt 26 ]; then
+        extra_params='-DFEATURE_aaudio=OFF'
+    fi
 
     android-${_android_arch}-cmake \
         -B build-shared \
@@ -52,7 +64,6 @@ build() {
         -G Ninja \
         -DCMAKE_FIND_ROOT_PATH="${ANDROID_PREFIX}" \
         -DQT_BINARY_DIR=${ANDROID_PREFIX_BIN} \
-        -DQT_INCLUDE_DIRS_NO_SYSTEM=ON \
         -DQT_HOST_PATH=/usr \
         -DANDROID_SDK_ROOT=${ANDROID_HOME} \
         -DANDROID_NDK_ROOT=${ANDROID_NDK_HOME} \
@@ -61,8 +72,9 @@ build() {
         -DBUILD_SHARED_LIBS=ON \
         -DQT_BUILD_EXAMPLES=OFF \
         -DQT_BUILD_DOCS=OFF \
-        -DFEATURE_pkg_config=ON
-    VERBOSE=1 cmake --build build-shared
+        -DFEATURE_pkg_config=ON \
+        ${extra_params}
+    cmake --build build-shared
 }
 
 package() {
@@ -71,9 +83,6 @@ package() {
 
     DESTDIR="${pkgdir}" cmake --install build-shared
 
-    install -d "${pkgdir}/usr/share/licenses"
-    ln -s "/usr/share/licenses/android-${_android_arch}-qt6-base" "${pkgdir}/usr/share/licenses/${pkgname}"
-
     # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
     find "${pkgdir}/${ANDROID_PREFIX}/" -type f -name '*.prl' \
         -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
@@ -81,4 +90,6 @@ package() {
     rm -rvf "${pkgdir}/${ANDROID_PREFIX}/share/doc" || true
     find ${pkgdir}/${ANDROID_PREFIX} -type f -name 'lib*.so' -exec ${ANDROID_STRIP} -g --strip-unneeded {} \;
     find ${pkgdir}/${ANDROID_PREFIX} -type f -name 'lib*.a' -exec ${ANDROID_STRIP} -g {} \;
+
+    install -Dm644 LICENSES/* -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }

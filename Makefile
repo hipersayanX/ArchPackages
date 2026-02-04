@@ -4,7 +4,7 @@ COPY = cp -vf
 REMOVE = rm -vf
 RMDIR = rm -rvf
 LINK = ln -fvs
-DOWNLOAD = wget -c
+DOWNLOAD ?= wget -c
 MAKEPKG = MAKEFLAGS=-j4 makepkg -sf
 MAKEPKGDO = makepkg -do
 LOCALREPONAME = local-packages
@@ -12,9 +12,10 @@ LOCALREPOARCH = any
 LOCALREPO = ${HOME}/.arch-repo
 LOCALREPODIR = $(LOCALREPO)/$(LOCALREPONAME)/os/$(LOCALREPOARCH)
 LOCALDB = $(LOCALREPODIR)/$(LOCALREPONAME).db.tar.zst
-FILE_PASSWORD =
+FILE_PASSWORD ?=
 BASE_PACKAGES = android-cmake android-configure android-environment android-meson android-pkg-config
 AUR_BASE_PACKAGES = android-ndk android-platform-21 android-platform-24 android-platform-34 android-platform-35 android-platform android-sdk android-sdk-build-tools android-sdk-platform-tools
+TEMPDIR ?= /tmp
 
 all: prepare
 	lines=$$(grep -n 'build() {' $$PWD/PKGBUILD | awk -F: '{print $$1}'); \
@@ -211,14 +212,14 @@ basepackages:
 		popd; \
 	done; \
 	for package in $(AUR_BASE_PACKAGES); do \
-		git clone https://aur.archlinux.org/$$package.git /tmp/$$package; \
-		pushd /tmp/$$package; \
+		git clone https://aur.archlinux.org/$$package.git $(TEMPDIR)/$$package; \
+		pushd $(TEMPDIR)/$$package; \
 		$(MAKEPKG); \
 		mkdir -p "$(LOCALREPODIR)"; \
 		cp -vf $$package-*.pkg.tar.zst "$(LOCALREPODIR)/"; \
 		repo-add -Rnp "$(LOCALDB)" $$package-*.pkg.tar.zst; \
 		popd; \
-		rm -rvf /tmp/$$package; \
+		rm -rvf $(TEMPDIR)/$$package; \
 	done; \
 
 package:

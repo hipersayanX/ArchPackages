@@ -4,7 +4,7 @@
 _android_arch=riscv64
 
 pkgname=android-${_android_arch}-qt6-imageformats
-_qtver=6.9.1
+_qtver=6.10.2
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=('any')
@@ -21,7 +21,7 @@ groups=('android-qt6-imageformats'
         "android-${_android_arch}-qt6")
 _pkgfqn="qtimageformats-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('ebe9f238daaf9bb752c7233edadf4af33fc4fa30d914936812b6410d3af1577c')
+md5sums=('30eda29374400ae42d3100c4fb5bd418')
 
 build() {
     cd "${srcdir}/${_pkgfqn}"
@@ -45,7 +45,7 @@ build() {
         -DQT_BUILD_EXAMPLES=OFF \
         -DQT_BUILD_DOCS=OFF \
         -DFEATURE_pkg_config=ON
-    VERBOSE=1 cmake --build build-shared
+    cmake --build build-shared
 }
 
 package() {
@@ -54,9 +54,6 @@ package() {
 
     DESTDIR="${pkgdir}" cmake --install build-shared
 
-    install -d "${pkgdir}/usr/share/licenses"
-    ln -s "/usr/share/licenses/android-${_android_arch}-qt6-base" "${pkgdir}/usr/share/licenses/${pkgname}"
-
     # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
     find "${pkgdir}/${ANDROID_PREFIX}/" -type f -name '*.prl' \
         -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
@@ -64,4 +61,6 @@ package() {
     rm -rvf "${pkgdir}/${ANDROID_PREFIX}/share/doc" || true
     find ${pkgdir}/${ANDROID_PREFIX} -type f -name 'lib*.so' -exec ${ANDROID_STRIP} -g --strip-unneeded {} \;
     find ${pkgdir}/${ANDROID_PREFIX} -type f -name 'lib*.a' -exec ${ANDROID_STRIP} -g {} \;
+
+    install -Dm644 LICENSES/* -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
