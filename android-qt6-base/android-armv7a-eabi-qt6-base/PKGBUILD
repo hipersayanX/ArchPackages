@@ -4,7 +4,7 @@
 _android_arch=armv7a-eabi
 
 pkgname=android-${_android_arch}-qt6-base
-_qtver=6.10.2
+_qtver=6.11.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=('any')
@@ -63,7 +63,7 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0018-Drop-CMAKE_SYSTEM_VERSION-from-modules-json-if-Linux.patch'
         '0019-Workaround-linker-error-about-missing-symbol-__sync_.patch'
         '0020-Fix-Android-build-after-ec2e3e7ac92d000e0df0c693b9a6.patch')
-sha256sums=('aeb78d29291a2b5fd53cb55950f8f5065b4978c25fb1d77f627d695ab9adf21e'
+sha256sums=('231ad85979864d914dc9568a1b71c91d6cf20d7b2021d059103bf0eb51cb755e'
             '0f03776b94757fa171b10410870142627886f428a7d1c148eada92e4b378ea55'
             '0c2b64aa5fe1aef64ce2cf755451ec4759b88b073afb877468f4b507e9a1d205'
             '530461532946fce52c9c68aff1ba4ec9cb0a14a76ede5aad7715663900833b89'
