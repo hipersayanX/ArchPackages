@@ -5,7 +5,7 @@
 _android_arch=
 
 pkgname=android-${_android_arch}-fontconfig
-pkgver=2.17.1
+pkgver=2.18.3
 pkgrel=1
 arch=('any')
 pkgdesc="A library for configuring and customizing font access (Android ${_android_arch})"
@@ -22,7 +22,7 @@ makedepends=('android-configure'
              'python-six')
 options=(!strip !buildflags staticlibs !emptydirs)
 source=("https://gitlab.freedesktop.org/fontconfig/fontconfig/-/archive/${pkgver}/fontconfig-${pkgver}.tar.gz")
-md5sums=('1a1f5336105e5b80f36dce7dabe04d1a')
+md5sums=('e5c72f7df22e989f758f21520aa4a657')
 
 prepare() {
     cd "${srcdir}/fontconfig-${pkgver}"
@@ -38,6 +38,7 @@ build() {
     cd "${srcdir}/fontconfig-${pkgver}"
     source android-env ${_android_arch}
 
+    export ac_cv_va_copy=yes
     android-${_android_arch}-configure \
         --disable-docs
     make $MAKEFLAGS

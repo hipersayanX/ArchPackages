@@ -4,7 +4,7 @@
 _android_arch=armv7a-eabi
 
 pkgname=android-${_android_arch}-qt6-shadertools
-_qtver=6.10.2
+_qtver=6.11.1
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=('any')
@@ -21,7 +21,7 @@ groups=('android-qt6-shadertools'
         "android-${_android_arch}-qt6")
 _pkgfqn="qtshadertools-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-md5sums=('d2c27b87cc464248367d4cf23774b6b7')
+md5sums=('e88d3afc67da46a69247574a703c0676')
 
 build() {
     cd "${srcdir}/${_pkgfqn}"

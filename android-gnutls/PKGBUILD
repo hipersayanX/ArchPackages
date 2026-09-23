@@ -4,24 +4,25 @@
 _android_arch=
 
 pkgname=android-${_android_arch}-gnutls
-pkgver=3.8.11
-pkgrel=2
+pkgver=3.8.13
+pkgrel=1
 arch=('any')
 pkgdesc="A library which provides a secure layer over a reliable transport layer (Android ${_android_arch})"
 url="https://www.gnutls.org/"
 license=('GPL-3.0-or-later AND LGPL-2.1-or-later')
 groups=('android-gnutls')
-depends=("android-${_android_arch}-libtasn1"
-         "android-${_android_arch}-zlib"
+depends=("android-${_android_arch}-libidn2"
+         "android-${_android_arch}-libtasn1"
+         "android-${_android_arch}-libunistring"
          "android-${_android_arch}-nettle"
          "android-${_android_arch}-p11-kit"
-         "android-${_android_arch}-libunistring")
+         "android-${_android_arch}-zlib")
 makedepends=('android-configure'
              'autogen')
 optdepends=("android-${_android_arch}-openssl: libgnutls-openssl")
 options=(!strip !buildflags staticlibs !emptydirs)
 source=("https://www.gnupg.org/ftp/gcrypt/gnutls/v${pkgver%.*}/gnutls-${pkgver}.tar.xz")
-md5sums=('614a4f4131ee9d9c004830181bddccea')
+md5sums=('a97671c1839340c6b43c23ccb3237180')
 
 build() {
     cd "${srcdir}/gnutls-${pkgver}"

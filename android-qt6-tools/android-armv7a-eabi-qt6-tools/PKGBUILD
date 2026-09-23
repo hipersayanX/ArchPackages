@@ -4,7 +4,7 @@
 _android_arch=armv7a-eabi
 
 pkgname=android-${_android_arch}-qt6-tools
-_qtver=6.10.2
+_qtver=6.11.1
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=('any')
@@ -23,7 +23,7 @@ groups=('android-qt6-tools'
 _pkgfqn="qttools-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
         '0001-Enable-only-SQL-plugins-which-are-known-to-work.patch')
-md5sums=('027685b4765edbf911781b1dc86f8e9d'
+md5sums=('333140ae31f70e8063a3bea5628ff1c7'
          '5f6f8a946af2da58ec4118240b3488dc')
 
 prepare () {

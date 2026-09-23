@@ -1,7 +1,0 @@
-pkg
-src
-*.tar.xz
-*.tar.gz
-*.tar.bz2
-*.asc
-*.sign
